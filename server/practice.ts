@@ -1,8 +1,8 @@
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
-import { kindOf } from '../src/data/curriculum';
+import { kindOf } from '../src/data/curriculum.js';
 import type { Difficulty, Question, QuestionType } from '../src/types/quiz';
-import { claude, DoubtError, SUBJECT_GUIDANCE } from './doubt';
+import { claude, DoubtError, SUBJECT_GUIDANCE } from './doubt.js';
 
 const QuestionSchema = z.object({
   type: z.enum(['mcq', 'assertion_reason', 'short_answer']),

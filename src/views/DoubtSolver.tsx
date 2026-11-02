@@ -1,6 +1,7 @@
 import { AlertTriangle, BookOpenCheck, ChevronDown, ImagePlus, Lightbulb, ListOrdered, Send, Sigma, Sparkles, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import MathText from '../components/MathText';
+import { apiErrorMessage } from '../lib/apiError';
 import SubjectChapterPicker, { useSelectedSubject } from '../components/SubjectChapterPicker';
 import type { SubjectKind } from '../data/curriculum';
 import { chipsFor, mockAnswer, SEED_CONVERSATIONS, type AiAnswer, type ChatMessage, type Conversation } from '../data/doubts';
@@ -58,7 +59,7 @@ function AnswerCard({ a, board, kind }: { a: AiAnswer; board: string; kind?: Sub
   );
 }
 
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_IMAGE_BYTES = 3 * 1024 * 1024; // base64 adds ~33%; hosted functions accept 4.5 MB bodies
 
 /** Splits a data URL into the base64 image block the server forwards to Claude. */
 const toImagePayload = (dataUrl: string) => {
@@ -147,7 +148,7 @@ export default function DoubtSolver() {
         setDemoMode(true);
         append({ id: crypto.randomUUID(), role: 'ai', answer: mockAnswer(text, !!image, subject.kind, subject.name, chapter), kind: subject.kind });
       } else {
-        append({ id: crypto.randomUUID(), role: 'ai', error: body.message ?? `Request failed (${res.status}).` });
+        append({ id: crypto.randomUUID(), role: 'ai', error: apiErrorMessage(res.status, body) });
       }
     } catch {
       append({ id: crypto.randomUUID(), role: 'ai', error: 'Could not reach the server. Check your connection and try again.' });
@@ -268,7 +269,7 @@ export default function DoubtSolver() {
                 const f = e.target.files?.[0];
                 e.target.value = '';
                 if (!f) return;
-                if (f.size > MAX_IMAGE_BYTES) return alert('Please choose a photo under 5 MB.');
+                if (f.size > MAX_IMAGE_BYTES) return alert('Please choose a photo under 3 MB.');
                 const reader = new FileReader();
                 reader.onload = () => setImage(reader.result as string);
                 reader.readAsDataURL(f);

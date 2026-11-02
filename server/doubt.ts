@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
 import { z } from 'zod';
-import { kindOf, type SubjectKind } from '../src/data/curriculum';
+import { kindOf, type SubjectKind } from '../src/data/curriculum.js';
 
 /** Same shape as `AiAnswer` in src/data/doubts.ts — the UI renders it into the three collapsible blocks. */
 const AnswerSchema = z.object({

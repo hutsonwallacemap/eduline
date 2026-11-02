@@ -1,6 +1,7 @@
 import { AlertTriangle, Bookmark, CheckCircle2, ChevronLeft, ChevronRight, Clock, Lightbulb, Loader2, RotateCcw, Settings2, Target, Timer, XCircle } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import MathText from '../components/MathText';
+import { apiErrorMessage } from '../lib/apiError';
 import SubjectChapterPicker, { useSelectedSubject } from '../components/SubjectChapterPicker';
 import { subjectsFor } from '../data/curriculum';
 import { isCorrect, pickQuestions } from '../data/questions';
@@ -407,7 +408,7 @@ export default function Practice() {
           problem =
             body.error === 'no_credentials'
               ? 'Add ANTHROPIC_API_KEY to .env.local and restart the dev server to generate questions for any chapter.'
-              : body.message ?? `Question generation failed (${res.status}).`;
+              : apiErrorMessage(res.status, body);
       } catch {
         problem = 'Could not reach the server to generate questions.';
       }
