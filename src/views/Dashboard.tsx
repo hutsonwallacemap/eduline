@@ -4,8 +4,8 @@ import { subjectsFor } from '../data/curriculum';
 import { tierOf, useApp, type View } from '../store';
 
 const MODULES: { view: View; title: string; desc: string; icon: typeof Target; tint: string }[] = [
-  { view: 'doubts', title: 'AI Doubt Solver', desc: 'Step-by-step answers with formulas', icon: MessageCircleQuestion, tint: 'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300' },
-  { view: 'practice', title: 'Practice Generator', desc: 'Timed tests with instant grading', icon: PenLine, tint: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300' },
+  { view: 'doubts', title: 'Doubt Solver', desc: 'Official CBSE board answers', icon: MessageCircleQuestion, tint: 'bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300' },
+  { view: 'practice', title: 'Practice Tests', desc: 'Board questions, timed and graded', icon: PenLine, tint: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300' },
   { view: 'revision', title: 'Formula Sheets', desc: 'Flashcards and cheat sheets', icon: BookMarked, tint: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300' },
   { view: 'papers', title: 'Sample Papers', desc: 'Board papers and marking schemes', icon: FileText, tint: 'bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-300' },
 ];

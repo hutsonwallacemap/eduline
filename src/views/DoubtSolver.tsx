@@ -1,10 +1,11 @@
-import { AlertTriangle, BookOpenCheck, ChevronDown, ImagePlus, Lightbulb, ListOrdered, Send, Sigma, Sparkles, X } from 'lucide-react';
+import { AlertTriangle, BookOpenCheck, ChevronDown, ExternalLink, Lightbulb, ListOrdered, Send, Sigma, Sparkles } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import MathText from '../components/MathText';
-import { apiErrorMessage } from '../lib/apiError';
 import SubjectChapterPicker, { useSelectedSubject } from '../components/SubjectChapterPicker';
 import type { SubjectKind } from '../data/curriculum';
-import { chipsFor, mockAnswer, SEED_CONVERSATIONS, type AiAnswer, type ChatMessage, type Conversation } from '../data/doubts';
+import { chapterQuestions, searchBank } from '../data/bank';
+import { curatedAnswer, SEED_CONVERSATIONS, type AiAnswer, type ChatMessage, type Conversation } from '../data/doubts';
+import type { Question } from '../types/quiz';
 import { useApp } from '../store';
 
 function Block({ title, icon: Icon, tint, children, defaultOpen = true }: {
@@ -59,41 +60,56 @@ function AnswerCard({ a, board, kind }: { a: AiAnswer; board: string; kind?: Sub
   );
 }
 
-const MAX_IMAGE_BYTES = 3 * 1024 * 1024; // base64 adds ~33%; hosted functions accept 4.5 MB bodies
-
-/** Splits a data URL into the base64 image block the server forwards to Claude. */
-const toImagePayload = (dataUrl: string) => {
-  const [, mediaType, data] = dataUrl.match(/^data:(image\/[a-z]+);base64,(.*)$/) ?? [];
-  return { mediaType, data };
-};
-
-/** Prior turns as plain text, so follow-up questions keep their context. */
-const toHistory = (msgs: ChatMessage[]) =>
-  msgs
-    .filter((m) => m.text || m.answer || m.image)
-    .slice(-10)
-    .map((m) =>
-      m.role === 'user'
-        ? { role: 'user' as const, text: m.text ?? '(textbook photo)' }
-        : { role: 'assistant' as const, text: m.answer ? `${m.answer.steps}
-
-Rule used: ${m.answer.formula}
-
-Tip: ${m.answer.pitfall}` : '' },
-    )
-    .filter((m) => m.text);
+/** A CBSE board / sample-paper question with its official marking-scheme answer. */
+function BankAnswer({ q }: { q: Question }) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700">
+      <div className="bg-slate-50 px-3 py-2 text-sm dark:bg-slate-800/60">
+        <div className="mb-1 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
+          <span className="chip bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">{q.source ?? 'EduGenie'}</span>
+          <span>{q.chapter}</span>
+          <span>· {q.marks} mark{q.marks > 1 ? 's' : ''}</span>
+        </div>
+        <div className="whitespace-pre-line font-medium"><MathText text={q.question} /></div>
+        {q.options && (
+          <ol className="mt-1 space-y-0.5 text-slate-600 dark:text-slate-300">
+            {q.options.map((o, i) => (
+              <li key={i} className={i === q.correctAnswer ? 'font-semibold text-emerald-700 dark:text-emerald-300' : ''}>
+                {String.fromCharCode(65 + i)}. <MathText text={o} /> {i === q.correctAnswer && '✓'}
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
+      <div className="px-3 py-3 text-sm leading-relaxed">
+        <div className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-violet-600">
+          <ListOrdered className="h-3.5 w-3.5" /> {q.source ? 'Official answer · CBSE marking scheme' : 'Answer'}
+        </div>
+        {q.explanation ? (
+          <div className="whitespace-pre-line"><MathText text={q.explanation} /></div>
+        ) : (
+          <p className="text-slate-500">The marking scheme gives only the answer option for this question.</p>
+        )}
+        {q.sourceUrl && (
+          <div className="mt-2 flex flex-wrap gap-3 text-xs">
+            <a href={q.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-violet-600 hover:underline">Question paper <ExternalLink className="h-3 w-3" /></a>
+            {q.schemeUrl && <a href={q.schemeUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-violet-600 hover:underline">Marking scheme <ExternalLink className="h-3 w-3" /></a>}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function DoubtSolver() {
-  const { selectedBoard, selectedGrade, selectedStream, selectedChapter } = useApp();
+  const { selectedBoard, selectedGrade, selectedChapter } = useApp();
   const subject = useSelectedSubject();
   const ready = !!subject && !!selectedChapter;
   const [convos, setConvos] = useState<Conversation[]>(SEED_CONVERSATIONS);
   const [activeId, setActiveId] = useState(SEED_CONVERSATIONS[1].id);
   const [input, setInput] = useState('');
-  const [image, setImage] = useState<string | null>(null);
   const [thinking, setThinking] = useState(false);
-  const [demoMode, setDemoMode] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const [starters, setStarters] = useState<Question[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
   const active = convos.find((c) => c.id === activeId)!;
 
@@ -102,59 +118,55 @@ export default function DoubtSolver() {
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
   }, [active?.messages.length, thinking]);
 
-  const ask = async (text: string) => {
-    if ((!text.trim() && !image) || thinking || !subject || !selectedChapter) return;
+  // Real board questions from the chosen chapter, offered as one-tap starting points.
+  useEffect(() => {
+    let live = true;
+    if (subject && selectedChapter) chapterQuestions(selectedGrade, subject.name, selectedChapter).then((qs) => live && setStarters(qs));
+    else setStarters([]);
+    return () => {
+      live = false;
+    };
+  }, [selectedGrade, subject, selectedChapter]);
+
+  /** Answers come from the offline CBSE bank: the closest board questions in this class, subject and chapter. */
+  const ask = async (text: string, picked?: Question) => {
+    if (!text.trim() || thinking || !subject || !selectedChapter) return;
     const chapter = selectedChapter;
     const uid = crypto.randomUUID();
-    const userMsg: ChatMessage = { id: uid, role: 'user', text: text.trim() || undefined, image: image ?? undefined };
+    const userMsg: ChatMessage = { id: uid, role: 'user', text: text.trim() };
     const isNew = activeId === 'new';
     const targetId = isNew ? uid : activeId;
-    const prior = isNew ? [] : active.messages;
     const append = (m: ChatMessage) =>
       setConvos((cs) => cs.map((c) => (c.id === targetId ? { ...c, messages: [...c.messages, m] } : c)));
 
     setConvos((cs) =>
       // A question from the "New doubt" state starts a new conversation.
       isNew
-        ? [{ id: uid, title: text.trim() || 'Textbook photo', meta: `Class ${selectedGrade} · ${subject.name} · ${chapter}`, messages: [userMsg] }, ...cs]
+        ? [{ id: uid, title: text.trim(), meta: `Class ${selectedGrade} · ${subject.name} · ${chapter}`, messages: [userMsg] }, ...cs]
         : cs.map((c) => (c.id === activeId ? { ...c, messages: [...c.messages, userMsg] } : c)),
     );
     setActiveId(targetId);
     setInput('');
-    setImage(null);
     setThinking(true);
 
-    try {
-      const res = await fetch('/api/doubt', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          board: selectedBoard,
-          grade: selectedGrade,
-          stream: selectedStream,
-          subject: subject.name,
-          chapter,
-          question: text.trim(),
-          image: image ? toImagePayload(image) : undefined,
-          history: toHistory(prior),
-        }),
-      });
-      const body = await res.json().catch(() => ({}));
-      if (res.ok) {
-        setDemoMode(false);
-        append({ id: crypto.randomUUID(), role: 'ai', answer: body as AiAnswer, kind: subject.kind });
-      } else if (body.error === 'no_credentials') {
-        // No API key on the server: keep the app usable with the curated demo answers.
-        setDemoMode(true);
-        append({ id: crypto.randomUUID(), role: 'ai', answer: mockAnswer(text, !!image, subject.kind, subject.name, chapter), kind: subject.kind });
-      } else {
-        append({ id: crypto.randomUUID(), role: 'ai', error: apiErrorMessage(res.status, body) });
-      }
-    } catch {
-      append({ id: crypto.randomUUID(), role: 'ai', error: 'Could not reach the server. Check your connection and try again.' });
-    } finally {
-      setThinking(false);
+    const matches = picked ? [picked] : await searchBank(selectedGrade, subject.name, chapter, text);
+    if (matches.length) {
+      append({ id: crypto.randomUUID(), role: 'ai', matches });
+    } else {
+      const curated = curatedAnswer(text, subject.kind);
+      append(
+        curated
+          ? { id: crypto.randomUUID(), role: 'ai', answer: curated, kind: subject.kind }
+          : {
+              id: crypto.randomUUID(),
+              role: 'ai',
+              notice: `No board question close to that in ${subject.name} · ${chapter}. Try the key words from your textbook question, or pick one of these:`,
+              matches: await chapterQuestions(selectedGrade, subject.name, chapter, 3),
+              asSuggestions: true,
+            },
+      );
     }
+    setThinking(false);
   };
 
   const messages = activeId === 'new' ? [] : active?.messages ?? [];
@@ -189,12 +201,6 @@ export default function DoubtSolver() {
       </aside>
 
       <section className="card flex h-[75vh] min-h-[480px] flex-col">
-        {demoMode && (
-          <div className="flex items-center gap-2 border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
-            <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-            Demo answers — for live answers from Claude, set ANTHROPIC_API_KEY in .env.local (local) or in the Vercel project’s Environment Variables (deployed), then restart or redeploy.
-          </div>
-        )}
         <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-4">
           {messages.length === 0 && (
             <div className="grid h-full place-items-center py-16 text-center text-slate-500">
@@ -203,7 +209,7 @@ export default function DoubtSolver() {
                 {ready ? (
                   <>
                     <p className="font-medium text-slate-700 dark:text-slate-200">Ask about {subject.name} · {selectedChapter}</p>
-                    <p className="text-sm">Type a question, pick a sample, or upload a textbook photo.</p>
+                    <p className="text-sm">Type your question — answers come from CBSE board papers and marking schemes.</p>
                   </>
                 ) : (
                   <>
@@ -217,7 +223,6 @@ export default function DoubtSolver() {
           {messages.map((m) =>
             m.role === 'user' ? (
               <div key={m.id} className="ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-violet-600 px-4 py-2 text-white">
-                {m.image && <img src={m.image} alt="Uploaded textbook" className="mb-2 max-h-48 rounded-lg" />}
                 {m.text && <MathText text={m.text} />}
               </div>
             ) : (
@@ -225,6 +230,22 @@ export default function DoubtSolver() {
                 <div className="mb-1 flex items-center gap-1 text-xs font-medium text-slate-500">
                   <Sparkles className="h-3.5 w-3.5 text-violet-500" /> EduGenie
                 </div>
+                {m.notice && <p className="mb-2 text-sm text-slate-600 dark:text-slate-300">{m.notice}</p>}
+                {m.matches && !m.asSuggestions && (
+                  <div className="space-y-3">
+                    {m.matches.length > 1 && <p className="text-sm text-slate-600 dark:text-slate-300">Closest board questions and their official answers:</p>}
+                    {m.matches.map((q) => <BankAnswer key={q.id} q={q} />)}
+                  </div>
+                )}
+                {m.matches && m.asSuggestions && (
+                  <div className="flex flex-col gap-2">
+                    {m.matches.map((q) => (
+                      <button key={q.id} onClick={() => ask(q.question, q)} className="cursor-pointer rounded-xl border border-slate-200 px-3 py-2 text-left text-sm hover:border-violet-400 dark:border-slate-700">
+                        <MathText text={q.question.length > 160 ? q.question.slice(0, 160) + '…' : q.question} />
+                      </button>
+                    ))}
+                  </div>
+                )}
                 {m.answer && <AnswerCard a={m.answer} board={selectedBoard} kind={m.kind} />}
                 {m.error && (
                   <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">
@@ -234,7 +255,7 @@ export default function DoubtSolver() {
               </div>
             ),
           )}
-          {thinking && <div className="text-sm text-slate-500 animate-pulse">EduGenie is working through the steps…</div>}
+          {thinking && <div className="text-sm text-slate-500 animate-pulse">Searching CBSE board questions…</div>}
         </div>
 
         <div className="border-t border-slate-200 p-3 dark:border-slate-800">
@@ -245,39 +266,13 @@ export default function DoubtSolver() {
             </div>
           )}
           <div className="mb-2 flex gap-2 overflow-x-auto pb-1">
-            {ready && chipsFor(subject.kind, selectedChapter).map((c) => (
-              <button key={c} onClick={() => ask(c)} className="chip shrink-0 cursor-pointer bg-slate-100 py-1 text-slate-700 hover:bg-violet-100 dark:bg-slate-800 dark:text-slate-300">
-                <MathText text={c} />
+            {ready && starters.map((q) => (
+              <button key={q.id} onClick={() => ask(q.question, q)} className="chip max-w-[18rem] shrink-0 cursor-pointer bg-slate-100 py-1 text-slate-700 hover:bg-violet-100 dark:bg-slate-800 dark:text-slate-300" title={q.question}>
+                <span className="truncate"><MathText text={q.question} /></span>
               </button>
             ))}
           </div>
-          {image && (
-            <div className="relative mb-2 inline-block">
-              <img src={image} alt="Preview" className="h-16 rounded-lg" />
-              <button onClick={() => setImage(null)} className="absolute -right-2 -top-2 rounded-full bg-slate-900 p-0.5 text-white" aria-label="Remove image">
-                <X className="h-3 w-3" />
-              </button>
-            </div>
-          )}
           <form onSubmit={(e) => { e.preventDefault(); ask(input); }} className="flex items-center gap-2">
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/png,image/jpeg,image/webp,image/gif"
-              hidden
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                e.target.value = '';
-                if (!f) return;
-                if (f.size > MAX_IMAGE_BYTES) return alert('Please choose a photo under 3 MB.');
-                const reader = new FileReader();
-                reader.onload = () => setImage(reader.result as string);
-                reader.readAsDataURL(f);
-              }}
-            />
-            <button type="button" disabled={!ready} onClick={() => fileRef.current?.click()} className="btn-ghost !px-3" aria-label="Upload textbook photo">
-              <ImagePlus className="h-4 w-4" />
-            </button>
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -287,7 +282,7 @@ export default function DoubtSolver() {
                   ? 'Choose a subject and chapter first'
                   : subject.kind === 'english' || subject.kind === 'hindi'
                     ? `Ask about ${selectedChapter} — characters, themes, devices, grammar…`
-                    : 'Type your doubt — use $...$ for maths, e.g. $x^2 + 1$'
+                    : `Type your ${subject.name} question…`
               }
               className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-transparent px-3 py-2 text-sm outline-none focus:border-violet-500 dark:border-slate-700"
             />

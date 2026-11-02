@@ -1,3 +1,4 @@
+import boardRaw from './cbseBoardPapers.json';
 import raw from './cbseSqp.json';
 
 /**
@@ -21,8 +22,22 @@ export const CBSE_SESSIONS = [...new Set(CBSE_PAPERS.map((p) => p.session))].sor
 
 export const cbseClassFor = (grade: number): 'X' | 'XII' => (grade >= 11 ? 'XII' : 'X');
 
-/** Whether a CBSE paper belongs to one of the app's subjects (CBSE splits some into variants). */
+/** CBSE board exam papers 2022–2026 (main and compartment), from cbse.gov.in question-paper and marking-scheme pages. */
+export interface BoardPaper {
+  year: number;
+  exam: 'Main' | 'Compartment';
+  cls: 'X' | 'XII';
+  subject: string;
+  qp: string; // zip or pdf
+  ms: string | null;
+}
+
+export const BOARD_PAPERS = boardRaw as BoardPaper[];
+export const BOARD_YEARS = [...new Set(BOARD_PAPERS.map((p) => p.year))].sort((a, b) => b - a);
+
+/** Whether a CBSE paper belongs to one of the app's subjects (CBSE splits some into variants and spells some differently). */
 export function matchesSubject(appSubject: string, cbseSubject: string): boolean {
+  cbseSubject = cbseSubject.replace(/poltical/i, 'Political').replace(/\s+/g, ' ').trim();
   switch (appSubject) {
     case 'Mathematics':
       return cbseSubject.startsWith('Mathematics');
@@ -31,6 +46,6 @@ export function matchesSubject(appSubject: string, cbseSubject: string): boolean
     case 'Hindi':
       return cbseSubject.startsWith('Hindi');
     default:
-      return cbseSubject === appSubject;
+      return cbseSubject.toLowerCase() === appSubject.toLowerCase();
   }
 }

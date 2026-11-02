@@ -1,5 +1,6 @@
 import { BookMarked, ChevronDown, X } from 'lucide-react';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { ALL_CHAPTERS, chapterCounts, MIXED_CHAPTER } from '../data/bank';
 import { subjectsFor, type Subject } from '../data/curriculum';
 import { useApp } from '../store';
 import SubjectIcon from './SubjectIcon';
@@ -26,6 +27,17 @@ export default function SubjectChapterPicker({ compact = false }: { compact?: bo
   const boxRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listId = useId();
+  const [counts, setCounts] = useState<{ counts: Record<string, number>; total: number } | null>(null);
+
+  // Question counts from the CBSE bank, so students can see which chapters have board questions.
+  useEffect(() => {
+    let live = true;
+    setCounts(null);
+    if (selectedSubject) chapterCounts(selectedGrade, selectedSubject).then((c) => live && setCounts(c));
+    return () => {
+      live = false;
+    };
+  }, [selectedGrade, selectedSubject]);
 
   useEffect(() => {
     setDraft(selectedChapter);
@@ -42,9 +54,12 @@ export default function SubjectChapterPicker({ compact = false }: { compact?: bo
 
   const suggestions = useMemo(() => {
     const q = draft.trim().toLowerCase();
-    const all = subject?.chapters ?? [];
+    const extra = counts?.total ? [ALL_CHAPTERS, ...(counts.counts[MIXED_CHAPTER] ? [MIXED_CHAPTER] : [])] : [];
+    const all = [...extra, ...(subject?.chapters ?? [])];
     return q && !all.some((c) => c.toLowerCase() === q) ? all.filter((c) => c.toLowerCase().includes(q)) : all;
-  }, [draft, subject]);
+  }, [draft, subject, counts]);
+
+  const countFor = (c: string) => (c === ALL_CHAPTERS ? counts?.total : counts?.counts[c]) ?? 0;
 
   const commit = (value: string) => {
     setDraft(value);
@@ -119,9 +134,12 @@ export default function SubjectChapterPicker({ compact = false }: { compact?: bo
                   <button
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => commit(c)}
-                    className={`w-full cursor-pointer rounded-lg px-3 py-2 text-left text-sm hover:bg-violet-50 dark:hover:bg-violet-500/10 ${c === selectedChapter ? 'font-medium text-violet-700 dark:text-violet-300' : ''}`}
+                    className={`flex w-full cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-violet-50 dark:hover:bg-violet-500/10 ${c === selectedChapter ? 'font-medium text-violet-700 dark:text-violet-300' : ''}`}
                   >
-                    {c}
+                    <span className="flex-1">{c}</span>
+                    {counts && countFor(c) > 0 && (
+                      <span className="chip bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">{countFor(c)} Qs</span>
+                    )}
                   </button>
                 </li>
               ))}

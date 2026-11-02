@@ -1,6 +1,6 @@
 # EduGenie AI
 
-Adaptive learning platform for Indian Classes 7–12 (CBSE / ICSE / State Board). React + TypeScript + Tailwind v4 + Zustand + KaTeX, built with Vite.
+Learning platform for Indian Classes 7–12 (CBSE / ICSE / State Board). React + TypeScript + Tailwind v4 + Zustand + KaTeX, built with Vite. It runs entirely in the browser with no API key or server: questions and answers come from official CBSE papers bundled with the app.
 
 ```bash
 npm install
@@ -13,9 +13,9 @@ npm run dev
 | --- | --- | --- |
 | Shell, board/grade/stream state | `src/store.ts`, `src/components/Header.tsx`, `StreamModal.tsx` | Class 11–12 forces a stream choice; state persists in localStorage |
 | Dashboard | `src/views/Dashboard.tsx` | Subjects come from `src/data/curriculum.ts` per grade + stream; a subject card opens Practice with it selected |
-| AI Doubt Solver | `src/views/DoubtSolver.tsx` | Scoped to the chosen subject + chapter; answers split into steps / rule / board pitfall + mark keywords |
-| Practice & Test engine | `src/views/Practice.tsx` | Subject → chapter → timed quiz with palette → report with retry-missed |
-| Sample Papers Vault | `src/views/Papers.tsx`, `src/components/OfficialResources.tsx` | Official CBSE / CISCE / State Board links, plus 544 real CBSE Class 10/12 sample papers and marking schemes |
+| Doubt Solver | `src/views/DoubtSolver.tsx` | Searches the CBSE question bank within the chosen class, subject and chapter and shows the official marking-scheme answers |
+| Practice & Test engine | `src/views/Practice.tsx` | Subject → chapter → timed quiz with palette → report with retry-missed. MCQ / assertion-reason are auto-graded; written board answers are self-marked against the official scheme |
+| Sample Papers Vault | `src/views/Papers.tsx`, `src/components/OfficialResources.tsx` | CBSE board exam papers 2022–2026 and sample papers with marking schemes, plus CISCE / State Board links |
 | Formula & Revision | `src/views/Revision.tsx` | Flip-card carousel and printable cheat sheet |
 
 Math anywhere in content uses `$inline$` and `$$display$$`, rendered by `src/components/MathText.tsx`.
@@ -24,37 +24,31 @@ Math anywhere in content uses `$inline$` and `$$display$$`, rendered by `src/com
 
 `selectedSubject` and `selectedChapter` live in the global store next to board, class and stream, so a choice made in the Doubt Solver carries into Practice and back. Changing class or stream clears them.
 
-`src/components/SubjectChapterPicker.tsx` is the shared picker: subject chips for the class/stream, then a chapter box where students type their chapter or pick from suggestions. Suggestions are NCERT chapters per class and subject (`chaptersFor` in `src/data/curriculum.ts`); ICSE and State Board students can type their own book's chapter name.
+`src/components/SubjectChapterPicker.tsx` is the shared picker: subject chips, then a chapter box where students type their chapter or pick from suggestions. Suggestions are NCERT chapters per class and subject (`chaptersFor` in `src/data/curriculum.ts`) with the number of bank questions per chapter, plus “All chapters”.
 
-Each subject has a `kind` (`math`, `science`, `english`, `hindi`, `social`, `commerce`, `cs`). It drives the sample prompts, the answer block labels and the AI instructions. English and Hindi are literature and language (character sketches, themes, poetic devices, grammar, comprehension) and never get numerical questions.
+## CBSE question bank
 
-## Live AI (Claude)
+`src/data/bank.json` holds questions with CBSE's official answers, taken from:
 
-Two endpoints keep the API key on the server. Locally they run in a Vite plugin (`server/plugin.ts`); on Vercel they run as functions in `api/`. Both call the same code in `server/routes.ts`:
+- CBSE board exam papers 2022–2026 (main exams, English-medium marking schemes), and
+- CBSE sample question papers 2023-24 to 2026-27 with their marking schemes,
 
-- `POST /api/doubt` (`server/doubt.ts`): the question, an optional textbook photo and the last 10 turns go to `claude-opus-5-5`, scoped to board, class, stream, subject and chapter.
-- `POST /api/practice` (`server/practice.ts`): generates gradable questions (MCQ, assertion-reason, exact short answers) for one subject and chapter.
+for the core Class 10 and 12 subjects. Each record has the class, subject, chapter (or none when it spans chapters, shown as “Mixed (board paper)”), type (`mcq`, `assertion_reason`, `descriptive`), options and answer index, the marking-scheme answer, marks, and links to the source paper and scheme. `src/data/bank.ts` loads it on demand and merges the hand-written questions in `src/data/questions.ts`.
 
-```bash
-cp .env.example .env.local   # then set ANTHROPIC_API_KEY
-npm run dev
-```
+How it was built: the question-paper and marking-scheme PDFs were downloaded from cbse.gov.in and cbseacademic.nic.in, their text extracted, and questions matched to answers by question number. A question was kept only when it passes these checks:
 
-Without a key both endpoints return `no_credentials`:
+- the answer letter matches the explained answer;
+- a written answer shares key words with its question;
+- the question does not need a figure, map or graph that text can't show.
 
-- the Doubt Solver falls back to demo answers in `src/data/doubts.ts`, with a banner;
-- Practice uses only offline questions for the exact class, subject and chapter. If there are none, it says so instead of showing another subject's questions.
+Chapters were assigned by keyword matching. Maths questions with complex notation are under-represented because PDF text extraction garbles fractions and symbols.
 
-Refused requests are retried on a fallback model server-side (`fallbacks: "default"`); other errors show in the UI.
+Classes 7–9 and 11 have no CBSE board or sample papers, so Practice there only has the hand-written questions.
 
-### Deploying on Vercel
+## Paper catalogues
 
-`api/doubt.ts` and `api/practice.ts` deploy as Vercel functions automatically (60 s limit, set in `vercel.json`). Add `ANTHROPIC_API_KEY` under **Project Settings → Environment Variables** and redeploy; `.env.local` is not uploaded. Photo uploads are capped at 3 MB to fit Vercel's 4.5 MB request limit.
+- `src/data/cbseBoardPapers.json` — board exam question papers and marking schemes, 2022–2026, main and compartment, from cbse.gov.in's question-paper and marking-scheme pages. Marking schemes are linked where CBSE published one.
+- `src/data/cbseSqp.json` — sample question papers and marking schemes, Class X and XII, 2023-24 to 2026-27, from cbseacademic.nic.in.
+- `src/data/officialLinks.ts` — official board portals (CBSE Academic, CISCE, State Boards).
 
-Other static hosts serve no `/api/*`; the UI then says the AI server isn't running there.
-
-## Offline data
-
-- `src/data/questions.ts` — offline question bank for Class 10 (Maths, Science, English, Social Science), typed by `src/types/quiz.ts`. Questions are only ever used for their own class, subject and chapter.
-- `src/data/officialLinks.ts` — official board portals (CBSE Academic SQP pages, CISCE, State Boards).
-- `src/data/cbseSqp.json` — official CBSE Sample Question Papers and Marking Schemes (Class X and XII, sessions 2023-24 to 2026-27), with links to the PDFs on cbseacademic.nic.in. Collected from CBSE's `SQP_CLASSX_<session>.html` and `SQP_CLASSXII_<session>.html` pages. Papers CBSE had not uploaded (its `error.pdf` placeholder) are left out. Re-collect it each session when CBSE publishes new papers.
+Re-collect these each year when CBSE publishes new papers.

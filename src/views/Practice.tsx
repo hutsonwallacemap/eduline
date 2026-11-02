@@ -1,16 +1,16 @@
-import { AlertTriangle, Bookmark, CheckCircle2, ChevronLeft, ChevronRight, Clock, Lightbulb, Loader2, RotateCcw, Settings2, Target, Timer, XCircle } from 'lucide-react';
+import { AlertTriangle, Bookmark, CheckCircle2, ChevronLeft, ChevronRight, Clock, ExternalLink, Lightbulb, Loader2, RotateCcw, Settings2, Target, ThumbsDown, ThumbsUp, Timer, XCircle } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import MathText from '../components/MathText';
-import { apiErrorMessage } from '../lib/apiError';
 import SubjectChapterPicker, { useSelectedSubject } from '../components/SubjectChapterPicker';
 import { subjectsFor } from '../data/curriculum';
-import { isCorrect, pickQuestions } from '../data/questions';
+import { ALL_CHAPTERS, pickQuestions } from '../data/bank';
+import { isCorrect } from '../data/questions';
 import { useApp } from '../store';
 import type { AnswerRecord, Difficulty, Question, QuestionType, QuizConfig } from '../types/quiz';
 
 type Phase = 'config' | 'live' | 'report';
 
-const TYPE_LABEL: Record<QuestionType, string> = { mcq: 'MCQs', assertion_reason: 'Assertion-Reason', short_answer: 'Short Answer' };
+const TYPE_LABEL: Record<QuestionType, string> = { mcq: 'MCQs', assertion_reason: 'Assertion-Reason', short_answer: 'Short Answer', descriptive: 'Board written answers' };
 const DIFFICULTY_LABEL: Record<Difficulty, string> = { Easy: 'Foundational', Moderate: 'Moderate', 'Board Exam Level': 'Board Standard' };
 
 const fmt = (sec: number) => `${Math.floor(sec / 60)}:${String(Math.max(0, sec) % 60).padStart(2, '0')}`;
@@ -21,7 +21,7 @@ function Configurator({ onStart, busy, error }: { onStart: (cfg: QuizConfig) => 
   const { selectedBoard, selectedGrade, selectedStream, selectedChapter, practicePreset, setSubject } = useApp();
   const subject = useSelectedSubject();
   const [count, setCount] = useState<5 | 10 | 20>(5);
-  const [types, setTypes] = useState<QuestionType[]>(['mcq', 'assertion_reason', 'short_answer']);
+  const [types, setTypes] = useState<QuestionType[]>(['mcq', 'assertion_reason', 'short_answer', 'descriptive']);
   const [difficulty, setDifficulty] = useState<Difficulty>('Moderate');
 
   // A sample paper's "Solve as Timed Test" pre-selects its subject when it exists for this class.
@@ -193,7 +193,7 @@ function LiveQuiz({ cfg, questions, onSubmit }: {
             <span className="chip bg-slate-100 dark:bg-slate-800">{TYPE_LABEL[q.type]}</span>
             <span className="chip bg-slate-100 dark:bg-slate-800">{q.marks} mark{q.marks > 1 ? 's' : ''}</span>
           </div>
-          <div className="mb-5 text-base leading-relaxed"><MathText text={q.question} /></div>
+          <div className="mb-5 whitespace-pre-line text-base leading-relaxed"><MathText text={q.question} /></div>
 
           {q.options ? (
             <div className="space-y-2" role="radiogroup">
@@ -210,6 +210,14 @@ function LiveQuiz({ cfg, questions, onSubmit }: {
                 </label>
               ))}
             </div>
+          ) : q.type === 'descriptive' ? (
+            <textarea
+              value={(a.answer as string) ?? ''}
+              onChange={(e) => update({ answer: e.target.value })}
+              rows={6}
+              placeholder="Write your answer. After you submit, compare it with CBSE's official marking scheme and mark yourself."
+              className="w-full rounded-xl border border-slate-200 bg-transparent px-3 py-2.5 text-sm outline-none focus:border-violet-500 dark:border-slate-700"
+            />
           ) : (
             <input
               value={(a.answer as string) ?? ''}
@@ -218,6 +226,7 @@ function LiveQuiz({ cfg, questions, onSubmit }: {
               className="w-full rounded-xl border border-slate-200 bg-transparent px-3 py-2.5 outline-none focus:border-violet-500 dark:border-slate-700"
             />
           )}
+          {q.source && <p className="mt-3 text-xs text-slate-500">From {q.source}</p>}
 
           {q.hint && (
             <div className="mt-4">
@@ -275,27 +284,33 @@ function LiveQuiz({ cfg, questions, onSubmit }: {
 /* ---------------- Report ---------------- */
 
 function Report({ cfg, questions, answers, timeUsedSec, onRetryMissed, onNew }: {
-  cfg: QuizConfig; questions: Question[]; answers: AnswerRecord[]; timeUsedSec: number; onRetryMissed: () => void; onNew: () => void;
+  cfg: QuizConfig; questions: Question[]; answers: AnswerRecord[]; timeUsedSec: number; onRetryMissed: (missed: Question[]) => void; onNew: () => void;
 }) {
+  // Written answers are marked by the student against the official marking scheme.
+  const [selfMarks, setSelfMarks] = useState<Record<number, boolean>>({});
+  const got = (q: Question, i: number) => (q.type === 'descriptive' ? selfMarks[i] === true : isCorrect(q, answers[i].answer));
+  const pending = questions.filter((q, i) => q.type === 'descriptive' && selfMarks[i] === undefined).length;
+
   const stats = useMemo(() => {
     let score = 0, max = 0, correct = 0, attempted = 0;
     questions.forEach((q, i) => {
       max += q.marks;
       const a = answers[i].answer;
-      if (a !== null && a !== '') attempted++;
-      if (isCorrect(q, a)) { correct++; score += q.marks; }
+      if ((a !== null && a !== '') || (q.type === 'descriptive' && selfMarks[i] !== undefined)) attempted++;
+      if (q.type === 'descriptive' ? selfMarks[i] === true : isCorrect(q, a)) { correct++; score += q.marks; }
     });
     return { score, max, correct, attempted, pct: Math.round((score / max) * 100), accuracy: attempted ? Math.round((correct / attempted) * 100) : 0 };
-  }, [questions, answers]);
+  }, [questions, answers, selfMarks]);
 
   const display = (q: Question, a: number | string | null) => {
     if (a === null || a === '') return '—';
     return q.options && typeof a === 'number' ? `${String.fromCharCode(65 + a)}. ${q.options[a]}` : String(a);
   };
   const correctDisplay = (q: Question) =>
-    q.options ? `${String.fromCharCode(65 + Number(q.correctAnswer))}. ${q.options[Number(q.correctAnswer)]}` : String(q.correctAnswer).split('|')[0];
+    q.options ? `${String.fromCharCode(65 + Number(q.correctAnswer))}. ${q.options[Number(q.correctAnswer)]}` : q.type === 'descriptive' ? 'See marking scheme below' : String(q.correctAnswer).split('|')[0];
 
-  const missed = questions.filter((q, i) => !isCorrect(q, answers[i].answer)).length;
+  const missedQuestions = questions.filter((q, i) => !got(q, i));
+  const missed = missedQuestions.length;
   const tiles = [
     { label: 'Score', value: `${stats.pct}%`, sub: `${stats.score}/${stats.max} marks`, icon: Target },
     { label: 'Accuracy', value: `${stats.accuracy}%`, sub: `${stats.correct}/${stats.attempted} attempted correct`, icon: CheckCircle2 },
@@ -311,11 +326,14 @@ function Report({ cfg, questions, answers, timeUsedSec, onRetryMissed, onNew }: 
           {stats.pct >= 80 ? 'Excellent work!' : stats.pct >= 50 ? 'Good effort — keep going' : 'Let’s revise and retry'}
         </h1>
         <div className="mt-4 flex flex-wrap gap-2">
-          <button onClick={onRetryMissed} disabled={!missed} className="btn bg-white text-violet-700 hover:bg-violet-50">
+          <button onClick={() => onRetryMissed(missedQuestions)} disabled={!missed} className="btn bg-white text-violet-700 hover:bg-violet-50">
             <RotateCcw className="h-4 w-4" /> Retry missed questions ({missed})
           </button>
           <button onClick={onNew} className="btn bg-white/15 hover:bg-white/25">New test</button>
         </div>
+        {pending > 0 && (
+          <p className="mt-3 text-sm text-white/80">Mark your {pending} written answer{pending > 1 ? 's' : ''} below against the official marking scheme to complete your score.</p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -332,13 +350,20 @@ function Report({ cfg, questions, answers, timeUsedSec, onRetryMissed, onNew }: 
         <h2 className="border-b border-slate-200 px-4 py-3 font-semibold dark:border-slate-800">Question breakdown</h2>
         <div className="divide-y divide-slate-200 dark:divide-slate-800">
           {questions.map((q, i) => {
-            const ok = isCorrect(q, answers[i].answer);
+            const ok = got(q, i);
+            const written = q.type === 'descriptive';
             return (
-              <details key={q.id} className="group px-4 py-3">
+              <details key={q.id} className="group px-4 py-3" open={written && selfMarks[i] === undefined}>
                 <summary className="flex cursor-pointer list-none items-start gap-3">
-                  {ok ? <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-500" /> : <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />}
+                  {written && selfMarks[i] === undefined ? (
+                    <span className="mt-0.5 h-5 w-5 shrink-0 rounded-full border-2 border-dashed border-amber-400" title="Mark yourself" />
+                  ) : ok ? (
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-500" />
+                  ) : (
+                    <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
+                  )}
                   <div className="min-w-0 flex-1">
-                    <div className="text-sm"><span className="font-medium">Q{i + 1}.</span> <MathText text={q.question} /></div>
+                    <div className="whitespace-pre-line text-sm"><span className="font-medium">Q{i + 1}.</span> <MathText text={q.question} /></div>
                     <div className="mt-2 grid gap-1 text-xs sm:grid-cols-3">
                       <div><span className="text-slate-500">Your answer: </span><MathText text={display(q, answers[i].answer)} className={ok ? 'text-emerald-600' : 'text-red-600'} /></div>
                       <div><span className="text-slate-500">Correct: </span><MathText text={correctDisplay(q)} className="text-emerald-600" /></div>
@@ -348,8 +373,27 @@ function Report({ cfg, questions, answers, timeUsedSec, onRetryMissed, onNew }: 
                   <ChevronRight className="h-4 w-4 shrink-0 text-slate-400 transition group-open:rotate-90" />
                 </summary>
                 <div className="ml-8 mt-3 rounded-xl bg-slate-50 p-3 text-sm dark:bg-slate-800/60">
-                  <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-violet-600">Step-by-step solution</div>
-                  <MathText text={q.explanation} />
+                  <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-violet-600">
+                    {q.source ? 'Official answer (CBSE marking scheme)' : 'Step-by-step solution'}
+                  </div>
+                  {q.explanation ? <div className="whitespace-pre-line"><MathText text={q.explanation} /></div> : <p className="text-slate-500">The marking scheme gives only the answer option for this question.</p>}
+                  {written && (
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <span className="text-xs text-slate-500">Did your answer cover these points?</span>
+                      <button onClick={() => setSelfMarks((m) => ({ ...m, [i]: true }))} className={`btn !px-3 !py-1 ${selfMarks[i] === true ? 'bg-emerald-600 text-white' : 'btn-ghost'}`}>
+                        <ThumbsUp className="h-4 w-4" /> Yes
+                      </button>
+                      <button onClick={() => setSelfMarks((m) => ({ ...m, [i]: false }))} className={`btn !px-3 !py-1 ${selfMarks[i] === false ? 'bg-red-600 text-white' : 'btn-ghost'}`}>
+                        <ThumbsDown className="h-4 w-4" /> Not yet
+                      </button>
+                    </div>
+                  )}
+                  {q.sourceUrl && (
+                    <div className="mt-2 flex flex-wrap gap-3 text-xs">
+                      <a href={q.sourceUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-violet-600 hover:underline">Question paper <ExternalLink className="h-3 w-3" /></a>
+                      {q.schemeUrl && <a href={q.schemeUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-violet-600 hover:underline">Marking scheme <ExternalLink className="h-3 w-3" /></a>}
+                    </div>
+                  )}
                   {q.markKeywords && (
                     <div className="mt-2 flex flex-wrap items-center gap-1">
                       <span className="text-xs text-slate-500">Mark keywords:</span>
@@ -369,7 +413,7 @@ function Report({ cfg, questions, answers, timeUsedSec, onRetryMissed, onNew }: 
 /* ---------------- Container ---------------- */
 
 export default function Practice() {
-  const { logPractice, selectedStream, practicePreset } = useApp();
+  const { logPractice, practicePreset } = useApp();
   const [phase, setPhase] = useState<Phase>('config');
   const [cfg, setCfg] = useState<QuizConfig | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -387,40 +431,23 @@ export default function Practice() {
     setPhase('live');
   };
 
-  /** Offline bank first (same class, subject and chapter only), then Claude generates the rest. */
+  /** Questions come from the offline CBSE bank: same class, subject and chapter only. */
   const begin = async (c: QuizConfig) => {
     setBusy(true);
     setError(null);
     setNotice(null);
-    const offline = pickQuestions(c);
-    let qs = offline;
-    if (offline.length < c.questionCount) {
-      let problem = '';
-      try {
-        const res = await fetch('/api/practice', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...c, stream: selectedStream, count: c.questionCount - offline.length }),
-        });
-        const body = await res.json().catch(() => ({}));
-        if (res.ok) qs = [...offline, ...(body.questions as Question[])];
-        else
-          problem =
-            body.error === 'no_credentials'
-              ? 'To generate questions for any chapter, set ANTHROPIC_API_KEY in .env.local (local) or in the Vercel project’s Environment Variables (deployed), then restart or redeploy.'
-              : apiErrorMessage(res.status, body);
-      } catch {
-        problem = 'Could not reach the server to generate questions.';
-      }
-      if (problem && !offline.length) {
-        setError(`No offline questions for Class ${c.grade} ${c.subject} · ${c.chapter}. ${problem}`);
-        setBusy(false);
-        return;
-      }
-      if (problem) setNotice(`Only ${offline.length} offline question${offline.length > 1 ? 's' : ''} for ${c.subject} · ${c.chapter}. ${problem}`);
-    }
+    const qs = await pickQuestions(c);
     setBusy(false);
-    start(practicePreset?.timeLimitMinutes ? c : { ...c, timeLimitMinutes: Math.max(2, Math.ceil(qs.length * 1.5)) }, qs);
+    if (!qs.length) {
+      setError(
+        c.grade === 10 || c.grade === 12
+          ? `No board questions for Class ${c.grade} ${c.subject} · ${c.chapter} yet. Pick a chapter marked with a question count, or choose “${ALL_CHAPTERS}”.`
+          : `Board questions are available for Class 10 and Class 12 (from CBSE board and sample papers). Switch class in the header to practise them.`,
+      );
+      return;
+    }
+    if (qs.length < c.questionCount) setNotice(`${qs.length} question${qs.length > 1 ? 's' : ''} available for ${c.subject} · ${c.chapter}.`);
+    start(practicePreset?.timeLimitMinutes ? c : { ...c, timeLimitMinutes: Math.max(2, Math.ceil(qs.reduce((t, q) => t + (q.type === 'descriptive' ? 3 * q.marks : 1.5), 0))) }, qs);
   };
 
   if (phase === 'config' || !cfg) return <Configurator onStart={begin} busy={busy} error={error} />;
@@ -452,10 +479,7 @@ export default function Practice() {
           answers={answers}
           timeUsedSec={timeUsed}
           onNew={() => setPhase('config')}
-          onRetryMissed={() => {
-            const missed = questions.filter((q, i) => !isCorrect(q, answers[i].answer));
-            start({ ...cfg, timeLimitMinutes: Math.max(2, Math.ceil(missed.length * 1.5)) }, missed);
-          }}
+          onRetryMissed={(missed) => start({ ...cfg, timeLimitMinutes: Math.max(2, Math.ceil(missed.length * 1.5)) }, missed)}
         />
       )}
     </div>

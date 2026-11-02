@@ -9,7 +9,7 @@ const AR_OPTIONS = [
   'A is false, but R is true.',
 ];
 
-/** Mock question bank. Short-answer `correctAnswer` lists accepted answers separated by "|". */
+/** Hand-written questions, merged into the CBSE question bank (bank.ts). Short-answer `correctAnswer` lists accepted answers separated by "|". */
 export const QUESTION_BANK: Question[] = [
   {
     id: 'm1', type: 'mcq', subject: 'Mathematics', chapter: 'Quadratic Equations', grade: 10, difficulty: 'Easy', marks: 1,
@@ -202,23 +202,11 @@ export const QUESTION_BANK: Question[] = [
 
 const normalise = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim();
 
+/** Auto-grading for MCQ, assertion-reason and short answers. Written (descriptive) answers are self-marked in the report. */
 export function isCorrect(q: Question, answer: number | string | null): boolean {
-  if (answer === null || answer === '') return false;
+  if (answer === null || answer === '' || q.type === 'descriptive') return false;
   if (q.type === 'short_answer') {
     return String(q.correctAnswer).split('|').some((a) => normalise(a) === normalise(String(answer)));
   }
   return answer === q.correctAnswer;
-}
-
-const same = (a: string, b: string) => normalise(a) === normalise(b);
-
-/**
- * Offline questions for a config: only the same class, subject and chapter (never another subject).
- * Prefers the chosen difficulty, then fills from other difficulties of the same chapter.
- */
-export function pickQuestions(cfg: { grade: number; subject: string; chapter: string; difficulty: string; types: string[]; questionCount: number }): Question[] {
-  const pool = QUESTION_BANK.filter(
-    (q) => q.grade === cfg.grade && q.subject === cfg.subject && same(q.chapter, cfg.chapter) && cfg.types.includes(q.type),
-  );
-  return [...pool.filter((q) => q.difficulty === cfg.difficulty), ...pool.filter((q) => q.difficulty !== cfg.difficulty)].slice(0, cfg.questionCount);
 }
