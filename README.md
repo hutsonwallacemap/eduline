@@ -43,6 +43,8 @@ How it was built: the question-paper and marking-scheme PDFs were downloaded fro
 
 Chapters were assigned by keyword matching. Maths questions with complex notation are under-represented because PDF text extraction garbles fractions and symbols.
 
+Questions in Hindi (or in legacy Hindi fonts), questions needing figures, and any MCQ whose marking-scheme explanation contradicts its answer letter are left out.
+
 Classes 7–9 and 11 have no CBSE board or sample papers, so Practice there only has the hand-written questions.
 
 ## Paper catalogues
