@@ -1,6 +1,7 @@
-import { AlertTriangle, Bookmark, CheckCircle2, ChevronLeft, ChevronRight, Clock, Lightbulb, RotateCcw, Settings2, Target, Timer, XCircle } from 'lucide-react';
+import { AlertTriangle, Bookmark, CheckCircle2, ChevronLeft, ChevronRight, Clock, Lightbulb, Loader2, RotateCcw, Settings2, Target, Timer, XCircle } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import MathText from '../components/MathText';
+import SubjectChapterPicker, { useSelectedSubject } from '../components/SubjectChapterPicker';
 import { subjectsFor } from '../data/curriculum';
 import { isCorrect, pickQuestions } from '../data/questions';
 import { useApp } from '../store';
@@ -15,21 +16,18 @@ const fmt = (sec: number) => `${Math.floor(sec / 60)}:${String(Math.max(0, sec) 
 
 /* ---------------- Configurator ---------------- */
 
-function Configurator({ onStart }: { onStart: (cfg: QuizConfig) => void }) {
-  const { selectedBoard, selectedGrade, selectedStream, practicePreset } = useApp();
-  const subjects = subjectsFor(selectedGrade, selectedStream);
-  const [subject, setSubject] = useState(
-    practicePreset?.subject && subjects.some((s) => s.name === practicePreset.subject) ? practicePreset.subject : subjects[0].name,
-  );
-  const chapters = subjects.find((s) => s.name === subject)?.chapters ?? [];
-  const [chapter, setChapter] = useState('All chapters');
+function Configurator({ onStart, busy, error }: { onStart: (cfg: QuizConfig) => void; busy: boolean; error: string | null }) {
+  const { selectedBoard, selectedGrade, selectedStream, selectedChapter, practicePreset, setSubject } = useApp();
+  const subject = useSelectedSubject();
   const [count, setCount] = useState<5 | 10 | 20>(5);
   const [types, setTypes] = useState<QuestionType[]>(['mcq', 'assertion_reason', 'short_answer']);
   const [difficulty, setDifficulty] = useState<Difficulty>('Moderate');
 
+  // A sample paper's "Solve as Timed Test" pre-selects its subject when it exists for this class.
   useEffect(() => {
-    setChapter('All chapters');
-  }, [subject]);
+    const name = practicePreset?.subject;
+    if (name && subjectsFor(selectedGrade, selectedStream).some((s) => s.name === name)) setSubject(name);
+  }, [practicePreset?.subject, selectedGrade, selectedStream, setSubject]);
 
   const toggleType = (t: QuestionType) =>
     setTypes((ts) => (ts.includes(t) ? (ts.length > 1 ? ts.filter((x) => x !== t) : ts) : [...ts, t]));
@@ -38,6 +36,7 @@ function Configurator({ onStart }: { onStart: (cfg: QuizConfig) => void }) {
     `cursor-pointer rounded-xl border px-3 py-2 text-sm transition ${
       active ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-300' : 'border-slate-200 hover:border-violet-300 dark:border-slate-700'
     }`;
+  const ready = !!subject && !!selectedChapter;
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -52,21 +51,9 @@ function Configurator({ onStart }: { onStart: (cfg: QuizConfig) => void }) {
           </div>
         )}
         <div className="space-y-5">
-          <label className="block">
-            <span className="mb-1 block text-sm font-medium">1. Subject</span>
-            <select className="select w-full !py-2" value={subject} onChange={(e) => setSubject(e.target.value)}>
-              {subjects.map((s) => <option key={s.name}>{s.name}</option>)}
-            </select>
-          </label>
-          <label className="block">
-            <span className="mb-1 block text-sm font-medium">2. Chapter</span>
-            <select className="select w-full !py-2" value={chapter} onChange={(e) => setChapter(e.target.value)}>
-              <option>All chapters</option>
-              {chapters.map((c) => <option key={c}>{c}</option>)}
-            </select>
-          </label>
+          <SubjectChapterPicker />
           <div>
-            <span className="mb-1 block text-sm font-medium">3. Number of questions</span>
+            <span className="mb-1 block text-sm font-medium">Number of questions</span>
             <div className="flex gap-2">
               {([5, 10, 20] as const).map((n) => (
                 <button key={n} onClick={() => setCount(n)} className={pill(count === n)}>{n}</button>
@@ -74,7 +61,7 @@ function Configurator({ onStart }: { onStart: (cfg: QuizConfig) => void }) {
             </div>
           </div>
           <div>
-            <span className="mb-1 block text-sm font-medium">4. Question types</span>
+            <span className="mb-1 block text-sm font-medium">Question types</span>
             <div className="flex flex-wrap gap-2">
               {(Object.keys(TYPE_LABEL) as QuestionType[]).map((t) => (
                 <button key={t} onClick={() => toggleType(t)} className={pill(types.includes(t))}>{TYPE_LABEL[t]}</button>
@@ -82,7 +69,7 @@ function Configurator({ onStart }: { onStart: (cfg: QuizConfig) => void }) {
             </div>
           </div>
           <div>
-            <span className="mb-1 block text-sm font-medium">5. Difficulty</span>
+            <span className="mb-1 block text-sm font-medium">Difficulty</span>
             <div className="flex flex-wrap gap-2">
               {(Object.keys(DIFFICULTY_LABEL) as Difficulty[]).map((d) => (
                 <button key={d} onClick={() => setDifficulty(d)} className={pill(difficulty === d)}>{DIFFICULTY_LABEL[d]}</button>
@@ -90,14 +77,21 @@ function Configurator({ onStart }: { onStart: (cfg: QuizConfig) => void }) {
             </div>
           </div>
         </div>
+        {error && (
+          <div className="mt-5 flex items-start gap-2 rounded-xl bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-500/10 dark:text-amber-200">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" /> {error}
+          </div>
+        )}
         <button
           className="btn-primary mt-6 w-full !py-3"
+          disabled={!ready || busy}
           onClick={() =>
+            subject &&
             onStart({
               board: selectedBoard,
               grade: selectedGrade,
-              subject,
-              chapter,
+              subject: subject.name,
+              chapter: selectedChapter,
               difficulty,
               questionCount: count,
               types,
@@ -105,7 +99,15 @@ function Configurator({ onStart }: { onStart: (cfg: QuizConfig) => void }) {
             })
           }
         >
-          Start test
+          {busy ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" /> Preparing {subject?.name} questions…
+            </>
+          ) : ready ? (
+            `Start ${subject.name} test`
+          ) : (
+            'Choose a subject and chapter'
+          )}
         </button>
       </div>
     </div>
@@ -303,7 +305,7 @@ function Report({ cfg, questions, answers, timeUsedSec, onRetryMissed, onNew }: 
   return (
     <div className="space-y-5">
       <div className="rounded-3xl bg-gradient-to-br from-violet-600 to-indigo-700 p-6 text-white">
-        <div className="text-sm text-white/70">{cfg.board} · Class {cfg.grade} · {cfg.subject}</div>
+        <div className="text-sm text-white/70">{cfg.board} · Class {cfg.grade} · {cfg.subject} · {cfg.chapter}</div>
         <h1 className="mt-1 text-2xl font-bold">
           {stats.pct >= 80 ? 'Excellent work!' : stats.pct >= 50 ? 'Good effort — keep going' : 'Let’s revise and retry'}
         </h1>
@@ -366,14 +368,16 @@ function Report({ cfg, questions, answers, timeUsedSec, onRetryMissed, onNew }: 
 /* ---------------- Container ---------------- */
 
 export default function Practice() {
-  const logPractice = useApp((s) => s.logPractice);
+  const { logPractice, selectedStream, practicePreset } = useApp();
   const [phase, setPhase] = useState<Phase>('config');
   const [cfg, setCfg] = useState<QuizConfig | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<AnswerRecord[]>([]);
   const [timeUsed, setTimeUsed] = useState(0);
   const [runKey, setRunKey] = useState(0);
-  const [fallback, setFallback] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
 
   const start = (c: QuizConfig, qs: Question[]) => {
     setCfg(c);
@@ -382,23 +386,49 @@ export default function Practice() {
     setPhase('live');
   };
 
-  if (phase === 'config' || !cfg)
-    return (
-      <Configurator
-        onStart={(c) => {
-          const qs = pickQuestions(c);
-          setFallback(!qs.some((q) => q.subject === c.subject));
-          start(c, qs);
-        }}
-      />
-    );
+  /** Offline bank first (same class, subject and chapter only), then Claude generates the rest. */
+  const begin = async (c: QuizConfig) => {
+    setBusy(true);
+    setError(null);
+    setNotice(null);
+    const offline = pickQuestions(c);
+    let qs = offline;
+    if (offline.length < c.questionCount) {
+      let problem = '';
+      try {
+        const res = await fetch('/api/practice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...c, stream: selectedStream, count: c.questionCount - offline.length }),
+        });
+        const body = await res.json().catch(() => ({}));
+        if (res.ok) qs = [...offline, ...(body.questions as Question[])];
+        else
+          problem =
+            body.error === 'no_credentials'
+              ? 'Add ANTHROPIC_API_KEY to .env.local and restart the dev server to generate questions for any chapter.'
+              : body.message ?? `Question generation failed (${res.status}).`;
+      } catch {
+        problem = 'Could not reach the server to generate questions.';
+      }
+      if (problem && !offline.length) {
+        setError(`No offline questions for Class ${c.grade} ${c.subject} · ${c.chapter}. ${problem}`);
+        setBusy(false);
+        return;
+      }
+      if (problem) setNotice(`Only ${offline.length} offline question${offline.length > 1 ? 's' : ''} for ${c.subject} · ${c.chapter}. ${problem}`);
+    }
+    setBusy(false);
+    start(practicePreset?.timeLimitMinutes ? c : { ...c, timeLimitMinutes: Math.max(2, Math.ceil(qs.length * 1.5)) }, qs);
+  };
+
+  if (phase === 'config' || !cfg) return <Configurator onStart={begin} busy={busy} error={error} />;
 
   return (
     <div className="space-y-4">
-      {fallback && phase === 'live' && (
+      {notice && phase === 'live' && (
         <div className="flex items-center gap-2 rounded-xl bg-amber-50 p-3 text-sm text-amber-900 dark:bg-amber-500/10 dark:text-amber-200">
-          <AlertTriangle className="h-4 w-4 shrink-0" />
-          The demo question bank covers Mathematics and Science only — showing those questions for {cfg.subject}.
+          <AlertTriangle className="h-4 w-4 shrink-0" /> {notice}
         </div>
       )}
       {phase === 'live' && (

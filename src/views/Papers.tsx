@@ -1,6 +1,7 @@
 import { Clock, Eye, FileCheck2, Filter, Printer, Timer, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { ALL_DOC_TYPES, PAPERS, type DocType, type Paper } from '../data/papers';
+import OfficialResources from '../components/OfficialResources';
 import { useApp } from '../store';
 
 function MultiFilter<T extends string | number>({ label, options, value, onChange, render = String }: {
@@ -119,42 +120,46 @@ export default function Papers() {
   );
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
-      <aside className="card h-fit space-y-4 p-4">
-        <div className="flex items-center gap-2 font-semibold"><Filter className="h-4 w-4 text-violet-600" /> Filters</div>
-        <MultiFilter label="Board" options={['CBSE', 'ICSE'] as ('CBSE' | 'ICSE')[]} value={boards} onChange={setBoards} />
-        <MultiFilter label="Class" options={[7, 8, 9, 10, 11, 12]} value={grades} onChange={setGrades} />
-        <MultiFilter label="Year" options={[2025, 2024, 2023, 2022, 2021, 2020]} value={years} onChange={setYears} />
-        <MultiFilter label="Document type" options={ALL_DOC_TYPES} value={types} onChange={setTypes} />
-        <button onClick={() => { setBoards([]); setGrades([]); setYears([]); setTypes([]); }} className="text-sm text-violet-600 hover:underline">Clear all</button>
-      </aside>
+    <div className="space-y-6">
+      <h1 className="text-xl font-semibold">Sample Papers Vault</h1>
+      <OfficialResources />
+      <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
+        <aside className="card h-fit space-y-4 p-4">
+          <div className="flex items-center gap-2 font-semibold"><Filter className="h-4 w-4 text-violet-600" /> Filters</div>
+          <MultiFilter label="Board" options={['CBSE', 'ICSE'] as ('CBSE' | 'ICSE')[]} value={boards} onChange={setBoards} />
+          <MultiFilter label="Class" options={[7, 8, 9, 10, 11, 12]} value={grades} onChange={setGrades} />
+          <MultiFilter label="Year" options={[2025, 2024, 2023, 2022, 2021, 2020]} value={years} onChange={setYears} />
+          <MultiFilter label="Document type" options={ALL_DOC_TYPES} value={types} onChange={setTypes} />
+          <button onClick={() => { setBoards([]); setGrades([]); setYears([]); setTypes([]); }} className="text-sm text-violet-600 hover:underline">Clear all</button>
+        </aside>
 
-      <section>
-        <div className="mb-3 flex items-baseline justify-between">
-          <h1 className="text-lg font-semibold">Sample Papers Vault</h1>
-          <span className="text-sm text-slate-500">{list.length} papers</span>
-        </div>
-        <div className="space-y-3">
-          {list.length === 0 && <div className="card p-8 text-center text-slate-500">No papers match these filters.</div>}
-          {list.map((p) => (
-            <div key={p.id} className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
-              <div className="min-w-0 flex-1">
-                <div className="font-medium">{p.board} Class {p.grade} {p.subject} — {p.year}</div>
-                <div className="mt-1 flex flex-wrap gap-1.5 text-xs">
-                  <span className="chip bg-slate-100 dark:bg-slate-800">{p.docType}</span>
-                  <span className="chip bg-slate-100 dark:bg-slate-800">{p.marks} Marks</span>
-                  <span className="chip bg-slate-100 dark:bg-slate-800"><Clock className="h-3 w-3" /> {p.durationHours} Hours</span>
+        <section>
+          <div className="mb-3 flex items-baseline justify-between">
+            <h2 className="text-lg font-semibold">EduGenie practice papers <span className="text-sm font-normal text-slate-500">· mock papers for timed practice</span></h2>
+            <span className="text-sm text-slate-500">{list.length} papers</span>
+          </div>
+          <div className="space-y-3">
+            {list.length === 0 && <div className="card p-8 text-center text-slate-500">No papers match these filters.</div>}
+            {list.map((p) => (
+              <div key={p.id} className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+                <div className="min-w-0 flex-1">
+                  <div className="font-medium">{p.board} Class {p.grade} {p.subject} — {p.year}</div>
+                  <div className="mt-1 flex flex-wrap gap-1.5 text-xs">
+                    <span className="chip bg-slate-100 dark:bg-slate-800">{p.docType}</span>
+                    <span className="chip bg-slate-100 dark:bg-slate-800">{p.marks} Marks</span>
+                    <span className="chip bg-slate-100 dark:bg-slate-800"><Clock className="h-3 w-3" /> {p.durationHours} Hours</span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button onClick={() => setOpen({ paper: p, mode: 'paper' })} className="btn-ghost !px-3 !py-1.5"><Eye className="h-4 w-4" /> View Paper</button>
+                  <button onClick={() => setOpen({ paper: p, mode: 'scheme' })} className="btn-ghost !px-3 !py-1.5"><FileCheck2 className="h-4 w-4" /> Marking Scheme (PDF)</button>
+                  <button onClick={() => setView('practice', { subject: p.subject, timeLimitMinutes: 30 })} className="btn-primary !px-3 !py-1.5"><Timer className="h-4 w-4" /> Solve as Timed Test</button>
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2">
-                <button onClick={() => setOpen({ paper: p, mode: 'paper' })} className="btn-ghost !px-3 !py-1.5"><Eye className="h-4 w-4" /> View Paper</button>
-                <button onClick={() => setOpen({ paper: p, mode: 'scheme' })} className="btn-ghost !px-3 !py-1.5"><FileCheck2 className="h-4 w-4" /> Marking Scheme (PDF)</button>
-                <button onClick={() => setView('practice', { subject: p.subject, timeLimitMinutes: 30 })} className="btn-primary !px-3 !py-1.5"><Timer className="h-4 w-4" /> Solve as Timed Test</button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
+      </div>
       {open && <PaperModal paper={open.paper} mode={open.mode} onClose={() => setOpen(null)} />}
     </div>
   );

@@ -54,7 +54,7 @@ export const QUESTION_BANK: Question[] = [
     markKeywords: ['sum formula', 'substitution'],
   },
   {
-    id: 'm6', type: 'mcq', subject: 'Mathematics', chapter: 'Trigonometry', grade: 10, difficulty: 'Easy', marks: 1,
+    id: 'm6', type: 'mcq', subject: 'Mathematics', chapter: 'Introduction to Trigonometry', grade: 10, difficulty: 'Easy', marks: 1,
     question: r`The value of $\sin^2 30^\circ + \cos^2 30^\circ$ is:`,
     options: ['$0$', r`$\frac{1}{2}$`, '$1$', r`$\frac{\sqrt{3}}{2}$`],
     correctAnswer: 2,
@@ -62,7 +62,7 @@ export const QUESTION_BANK: Question[] = [
     markKeywords: ['trigonometric identity'],
   },
   {
-    id: 'm7', type: 'mcq', subject: 'Mathematics', chapter: 'Trigonometry', grade: 10, difficulty: 'Board Exam Level', marks: 1,
+    id: 'm7', type: 'mcq', subject: 'Mathematics', chapter: 'Introduction to Trigonometry', grade: 10, difficulty: 'Board Exam Level', marks: 1,
     question: r`If $\tan\theta = \frac{3}{4}$, then $\sec\theta$ equals (with $\theta$ acute):`,
     options: [r`$\frac{5}{4}$`, r`$\frac{4}{5}$`, r`$\frac{5}{3}$`, r`$\frac{3}{5}$`],
     correctAnswer: 0,
@@ -77,7 +77,7 @@ export const QUESTION_BANK: Question[] = [
     markKeywords: ['mean formula'],
   },
   {
-    id: 's1', type: 'mcq', subject: 'Science', chapter: 'Light – Reflection & Refraction', grade: 10, difficulty: 'Easy', marks: 1,
+    id: 's1', type: 'mcq', subject: 'Science', chapter: 'Light – Reflection and Refraction', grade: 10, difficulty: 'Easy', marks: 1,
     question: r`The refractive index of glass is $1.5$. The speed of light in glass is ($c = 3 \times 10^8\ \text{m/s}$):`,
     options: [r`$2 \times 10^8$ m/s`, r`$4.5 \times 10^8$ m/s`, r`$1.5 \times 10^8$ m/s`, r`$3 \times 10^8$ m/s`],
     correctAnswer: 0,
@@ -85,7 +85,7 @@ export const QUESTION_BANK: Question[] = [
     markKeywords: ['refractive index', 'speed of light'],
   },
   {
-    id: 's2', type: 'mcq', subject: 'Science', chapter: 'Light – Reflection & Refraction', grade: 10, difficulty: 'Board Exam Level', marks: 1,
+    id: 's2', type: 'mcq', subject: 'Science', chapter: 'Light – Reflection and Refraction', grade: 10, difficulty: 'Board Exam Level', marks: 1,
     question: r`A concave mirror has focal length $-15$ cm. An object at $-30$ cm forms an image at:`,
     options: ['$-30$ cm', '$-15$ cm', '$+30$ cm', '$-10$ cm'],
     correctAnswer: 0,
@@ -93,7 +93,7 @@ export const QUESTION_BANK: Question[] = [
     markKeywords: ['mirror formula', 'sign convention'],
   },
   {
-    id: 's3', type: 'assertion_reason', subject: 'Science', chapter: 'Chemical Reactions', grade: 10, difficulty: 'Moderate', marks: 1,
+    id: 's3', type: 'assertion_reason', subject: 'Science', chapter: 'Chemical Reactions and Equations', grade: 10, difficulty: 'Moderate', marks: 1,
     question: r`**Assertion (A):** Iron articles are painted to prevent rusting.
 **Reason (R):** Paint stops iron from coming in contact with air and moisture.`,
     options: AR_OPTIONS,
@@ -102,7 +102,7 @@ export const QUESTION_BANK: Question[] = [
     markKeywords: ['corrosion', 'air and moisture'],
   },
   {
-    id: 's4', type: 'mcq', subject: 'Science', chapter: 'Chemical Reactions', grade: 10, difficulty: 'Easy', marks: 1,
+    id: 's4', type: 'mcq', subject: 'Science', chapter: 'Chemical Reactions and Equations', grade: 10, difficulty: 'Easy', marks: 1,
     question: r`$\mathrm{CaO} + \mathrm{H_2O} \rightarrow \mathrm{Ca(OH)_2}$ is an example of a:`,
     options: ['Combination reaction', 'Decomposition reaction', 'Displacement reaction', 'Double displacement reaction'],
     correctAnswer: 0,
@@ -131,6 +131,73 @@ export const QUESTION_BANK: Question[] = [
     explanation: r`**Chlorophyll** in chloroplasts absorbs light: $6\mathrm{CO_2} + 6\mathrm{H_2O} \xrightarrow[\text{chlorophyll}]{\text{sunlight}} \mathrm{C_6H_{12}O_6} + 6\mathrm{O_2}$.`,
     markKeywords: ['chlorophyll', 'chloroplast'],
   },
+  {
+    id: 'e1', type: 'mcq', subject: 'English', chapter: 'Poem: Dust of Snow', grade: 10, difficulty: 'Easy', marks: 1,
+    question: 'In “Dust of Snow”, the crow and the hemlock tree are usually symbols of:',
+    options: ['Joy and hope', 'Sorrow and gloom', 'Wealth and power', 'Peace and calm'],
+    correctAnswer: 1,
+    explanation: 'Crows and the poisonous hemlock are traditionally linked with **gloom and death**. Frost uses them ironically: here they lift the poet’s mood.',
+    hint: 'Think of what a hemlock tree is known for.',
+    markKeywords: ['symbolism', 'irony'],
+  },
+  {
+    id: 'e2', type: 'mcq', subject: 'English', chapter: 'Poem: Dust of Snow', grade: 10, difficulty: 'Moderate', marks: 1,
+    question: 'What is the rhyme scheme of each stanza of “Dust of Snow”?',
+    options: ['AABB', 'ABAB', 'ABBA', 'ABCD'],
+    correctAnswer: 1,
+    explanation: 'crow / snow and tree / me alternate, giving **ABAB**.',
+    markKeywords: ['rhyme scheme'],
+  },
+  {
+    id: 'e3', type: 'assertion_reason', subject: 'English', chapter: 'A Letter to God', grade: 10, difficulty: 'Board Exam Level', marks: 1,
+    question: `**Assertion (A):** Lencho called the post office employees “a bunch of crooks”.
+**Reason (R):** He believed God had sent the full amount and the employees had taken part of it.`,
+    options: AR_OPTIONS,
+    correctAnswer: 0,
+    explanation: 'Lencho’s **unshakeable faith in God** made him suspect the postmaster’s staff when he received only seventy pesos — the **irony** is that they had collected the money for him.',
+    markKeywords: ['faith in God', 'irony'],
+  },
+  {
+    id: 'e4', type: 'mcq', subject: 'English', chapter: 'A Letter to God', grade: 10, difficulty: 'Easy', marks: 1,
+    question: 'What destroyed Lencho’s crop?',
+    options: ['A flood', 'Locusts', 'A hailstorm', 'A drought'],
+    correctAnswer: 2,
+    explanation: 'Rain turned into **hailstones** that destroyed the corn field completely.',
+    markKeywords: ['hailstorm'],
+  },
+  {
+    id: 'e5', type: 'mcq', subject: 'English', chapter: 'Grammar', grade: 10, difficulty: 'Moderate', marks: 1,
+    question: 'Choose the correct reported speech: She said, “I am busy today.”',
+    options: ['She said that she is busy today.', 'She said that she was busy that day.', 'She said that I was busy today.', 'She says that she was busy that day.'],
+    correctAnswer: 1,
+    explanation: 'Reporting verb in the past → **present becomes past** (am → was), and **today becomes that day**; the pronoun changes to she.',
+    markKeywords: ['tense backshift', 'time expression change'],
+  },
+  {
+    id: 'e6', type: 'mcq', subject: 'English', chapter: 'Grammar', grade: 10, difficulty: 'Easy', marks: 1,
+    question: 'Fill in the blank: Neither the teacher nor the students ___ present.',
+    options: ['was', 'were', 'is', 'has been'],
+    correctAnswer: 1,
+    explanation: 'With **neither … nor**, the verb agrees with the nearer subject — “students” is plural, so **were**.',
+    markKeywords: ['subject–verb agreement', 'proximity rule'],
+  },
+  {
+    id: 'ss1', type: 'mcq', subject: 'Social Science', chapter: 'History: Nationalism in India', grade: 10, difficulty: 'Easy', marks: 1,
+    question: 'In which year was the Non-Cooperation Movement launched?',
+    options: ['1919', '1920', '1930', '1942'],
+    correctAnswer: 1,
+    explanation: 'Gandhiji launched the **Non-Cooperation Movement in 1920** (approved at the Nagpur session, December 1920).',
+    markKeywords: ['1920', 'Non-Cooperation'],
+  },
+  {
+    id: 'ss2', type: 'assertion_reason', subject: 'Social Science', chapter: 'Civics: Power Sharing', grade: 10, difficulty: 'Moderate', marks: 1,
+    question: `**Assertion (A):** Belgium amended its Constitution four times between 1970 and 1993.
+**Reason (R):** It wanted to accommodate its linguistic diversity and keep the country united.`,
+    options: AR_OPTIONS,
+    correctAnswer: 0,
+    explanation: 'The amendments created **community government** and equal Dutch–French representation, which explains A.',
+    markKeywords: ['accommodation', 'community government'],
+  },
 ];
 
 const normalise = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim();
@@ -143,22 +210,15 @@ export function isCorrect(q: Question, answer: number | string | null): boolean 
   return answer === q.correctAnswer;
 }
 
+const same = (a: string, b: string) => normalise(a) === normalise(b);
+
 /**
- * Picks questions for a config. Narrows by subject → chapter → type → difficulty,
- * relaxing the narrowest filters first when the mock bank runs short.
+ * Offline questions for a config: only the same class, subject and chapter (never another subject).
+ * Prefers the chosen difficulty, then fills from other difficulties of the same chapter.
  */
-export function pickQuestions(cfg: { subject: string; chapter: string; difficulty: string; types: string[]; questionCount: number }): Question[] {
-  const bySubject = QUESTION_BANK.filter((q) => q.subject === cfg.subject);
-  const pool = bySubject.length ? bySubject : QUESTION_BANK;
-  const tiers = [
-    pool.filter((q) => (cfg.chapter === 'All chapters' || q.chapter === cfg.chapter) && cfg.types.includes(q.type) && q.difficulty === cfg.difficulty),
-    pool.filter((q) => (cfg.chapter === 'All chapters' || q.chapter === cfg.chapter) && cfg.types.includes(q.type)),
-    pool.filter((q) => cfg.types.includes(q.type)),
-    pool,
-  ];
-  const picked: Question[] = [];
-  for (const t of tiers) {
-    for (const q of t) if (!picked.includes(q) && picked.length < cfg.questionCount) picked.push(q);
-  }
-  return picked;
+export function pickQuestions(cfg: { grade: number; subject: string; chapter: string; difficulty: string; types: string[]; questionCount: number }): Question[] {
+  const pool = QUESTION_BANK.filter(
+    (q) => q.grade === cfg.grade && q.subject === cfg.subject && same(q.chapter, cfg.chapter) && cfg.types.includes(q.type),
+  );
+  return [...pool.filter((q) => q.difficulty === cfg.difficulty), ...pool.filter((q) => q.difficulty !== cfg.difficulty)].slice(0, cfg.questionCount);
 }

@@ -9,6 +9,9 @@ interface AppState {
   selectedBoard: Board;
   selectedGrade: number;
   selectedStream: Stream;
+  /** Shared by Doubt Solver and Practice so Class -> Subject -> Chapter carries across views. */
+  selectedSubject: string | null;
+  selectedChapter: string;
   streak: number;
   dailyTarget: number;
   dailyDone: number;
@@ -20,6 +23,8 @@ interface AppState {
   setBoard: (b: Board) => void;
   setGrade: (g: number) => void;
   setStream: (s: Stream) => void;
+  setSubject: (s: string | null) => void;
+  setChapter: (c: string) => void;
   setView: (v: View, preset?: Partial<QuizConfig> | null) => void;
   setStreamModalOpen: (open: boolean) => void;
   toggleTheme: () => void;
@@ -32,6 +37,8 @@ export const useApp = create<AppState>()(
       selectedBoard: 'CBSE',
       selectedGrade: 10,
       selectedStream: 'General',
+      selectedSubject: null,
+      selectedChapter: '',
       streak: 7,
       dailyTarget: 20,
       dailyDone: 8,
@@ -42,11 +49,16 @@ export const useApp = create<AppState>()(
       setBoard: (selectedBoard) => set({ selectedBoard }),
       setGrade: (selectedGrade) =>
         set((s) => {
-          if (selectedGrade <= 10) return { selectedGrade, selectedStream: 'General', streamModalOpen: false };
+          // Chapters differ by class, so a new class clears the subject/chapter pick.
+          const reset = { selectedGrade, selectedSubject: null, selectedChapter: '' };
+          if (selectedGrade <= 10) return { ...reset, selectedStream: 'General', streamModalOpen: false };
           // Senior secondary needs a stream; keep an existing one, otherwise ask.
-          return s.selectedStream === 'General' ? { selectedGrade, streamModalOpen: true } : { selectedGrade };
+          return s.selectedStream === 'General' ? { ...reset, streamModalOpen: true } : reset;
         }),
-      setStream: (selectedStream) => set({ selectedStream, streamModalOpen: false }),
+      setStream: (selectedStream) => set({ selectedStream, streamModalOpen: false, selectedSubject: null, selectedChapter: '' }),
+      setSubject: (selectedSubject) =>
+        set((s) => (s.selectedSubject === selectedSubject ? {} : { selectedSubject, selectedChapter: '' })),
+      setChapter: (selectedChapter) => set({ selectedChapter }),
       setView: (view, practicePreset = null) => {
         set({ view, practicePreset });
         window.scrollTo({ top: 0 });
@@ -61,6 +73,8 @@ export const useApp = create<AppState>()(
         selectedBoard: s.selectedBoard,
         selectedGrade: s.selectedGrade,
         selectedStream: s.selectedStream,
+        selectedSubject: s.selectedSubject,
+        selectedChapter: s.selectedChapter,
         streak: s.streak,
         dailyDone: s.dailyDone,
         theme: s.theme,

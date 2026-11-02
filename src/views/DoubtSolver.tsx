@@ -1,7 +1,9 @@
-import { AlertTriangle, BookOpenCheck, ChevronDown, ImagePlus, Lightbulb, ListOrdered, Send, Sigma, Sparkles, TrendingUp, X } from 'lucide-react';
+import { AlertTriangle, BookOpenCheck, ChevronDown, ImagePlus, Lightbulb, ListOrdered, Send, Sigma, Sparkles, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import MathText from '../components/MathText';
-import { mockAnswer, SAMPLE_CHIPS, SEED_CONVERSATIONS, TRENDING, type AiAnswer, type ChatMessage, type Conversation } from '../data/doubts';
+import SubjectChapterPicker, { useSelectedSubject } from '../components/SubjectChapterPicker';
+import type { SubjectKind } from '../data/curriculum';
+import { chipsFor, mockAnswer, SEED_CONVERSATIONS, type AiAnswer, type ChatMessage, type Conversation } from '../data/doubts';
 import { useApp } from '../store';
 
 function Block({ title, icon: Icon, tint, children, defaultOpen = true }: {
@@ -20,7 +22,8 @@ function Block({ title, icon: Icon, tint, children, defaultOpen = true }: {
   );
 }
 
-function AnswerCard({ a, board }: { a: AiAnswer; board: string }) {
+function AnswerCard({ a, board, kind }: { a: AiAnswer; board: string; kind?: SubjectKind }) {
+  const language = kind === 'english' || kind === 'hindi';
   // Pull fenced ``` blocks out as monospace diagrams; the rest goes through KaTeX.
   const parts = a.steps.split(/```/);
   return (
@@ -35,7 +38,7 @@ function AnswerCard({ a, board }: { a: AiAnswer; board: string }) {
           ),
         )}
       </Block>
-      <Block title="Core formula / rule used" icon={Sigma} tint="text-indigo-600">
+      <Block title={language ? 'Core rule / literary device used' : kind === 'social' ? 'Key concept / definition' : 'Core formula / rule used'} icon={Sigma} tint="text-indigo-600">
         <MathText text={a.formula} />
       </Block>
       <Block title="Common board exam pitfall / tip" icon={Lightbulb} tint="text-amber-500" defaultOpen={false}>
@@ -73,14 +76,16 @@ const toHistory = (msgs: ChatMessage[]) =>
         ? { role: 'user' as const, text: m.text ?? '(textbook photo)' }
         : { role: 'assistant' as const, text: m.answer ? `${m.answer.steps}
 
-Formula: ${m.answer.formula}
+Rule used: ${m.answer.formula}
 
 Tip: ${m.answer.pitfall}` : '' },
     )
     .filter((m) => m.text);
 
 export default function DoubtSolver() {
-  const { selectedBoard, selectedGrade, selectedStream } = useApp();
+  const { selectedBoard, selectedGrade, selectedStream, selectedChapter } = useApp();
+  const subject = useSelectedSubject();
+  const ready = !!subject && !!selectedChapter;
   const [convos, setConvos] = useState<Conversation[]>(SEED_CONVERSATIONS);
   const [activeId, setActiveId] = useState(SEED_CONVERSATIONS[1].id);
   const [input, setInput] = useState('');
@@ -97,7 +102,8 @@ export default function DoubtSolver() {
   }, [active?.messages.length, thinking]);
 
   const ask = async (text: string) => {
-    if ((!text.trim() && !image) || thinking) return;
+    if ((!text.trim() && !image) || thinking || !subject || !selectedChapter) return;
+    const chapter = selectedChapter;
     const uid = crypto.randomUUID();
     const userMsg: ChatMessage = { id: uid, role: 'user', text: text.trim() || undefined, image: image ?? undefined };
     const isNew = activeId === 'new';
@@ -109,7 +115,7 @@ export default function DoubtSolver() {
     setConvos((cs) =>
       // A question from the "New doubt" state starts a new conversation.
       isNew
-        ? [{ id: uid, title: text.trim() || 'Textbook photo', meta: `Class ${selectedGrade} · Just now`, messages: [userMsg] }, ...cs]
+        ? [{ id: uid, title: text.trim() || 'Textbook photo', meta: `Class ${selectedGrade} · ${subject.name} · ${chapter}`, messages: [userMsg] }, ...cs]
         : cs.map((c) => (c.id === activeId ? { ...c, messages: [...c.messages, userMsg] } : c)),
     );
     setActiveId(targetId);
@@ -125,6 +131,8 @@ export default function DoubtSolver() {
           board: selectedBoard,
           grade: selectedGrade,
           stream: selectedStream,
+          subject: subject.name,
+          chapter,
           question: text.trim(),
           image: image ? toImagePayload(image) : undefined,
           history: toHistory(prior),
@@ -133,11 +141,11 @@ export default function DoubtSolver() {
       const body = await res.json().catch(() => ({}));
       if (res.ok) {
         setDemoMode(false);
-        append({ id: crypto.randomUUID(), role: 'ai', answer: body as AiAnswer });
+        append({ id: crypto.randomUUID(), role: 'ai', answer: body as AiAnswer, kind: subject.kind });
       } else if (body.error === 'no_credentials') {
         // No API key on the server: keep the app usable with the curated demo answers.
         setDemoMode(true);
-        append({ id: crypto.randomUUID(), role: 'ai', answer: mockAnswer(text, !!image) });
+        append({ id: crypto.randomUUID(), role: 'ai', answer: mockAnswer(text, !!image, subject.kind, subject.name, chapter), kind: subject.kind });
       } else {
         append({ id: crypto.randomUUID(), role: 'ai', error: body.message ?? `Request failed (${res.status}).` });
       }
@@ -156,6 +164,10 @@ export default function DoubtSolver() {
         <button onClick={() => setActiveId('new')} className="btn-primary w-full">
           <Sparkles className="h-4 w-4" /> New doubt
         </button>
+        <div className="card p-4">
+          <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Ask about</h3>
+          <SubjectChapterPicker compact />
+        </div>
         <div className="card p-3">
           <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Recent doubts</h3>
           <div className="space-y-1">
@@ -173,16 +185,6 @@ export default function DoubtSolver() {
             ))}
           </div>
         </div>
-        <div className="card hidden p-3 lg:block">
-          <h3 className="mb-2 flex items-center gap-1 px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">
-            <TrendingUp className="h-3.5 w-3.5" /> Trending NCERT concepts
-          </h3>
-          {TRENDING.map((t) => (
-            <button key={t} onClick={() => { setActiveId('new'); setInput(`Explain ${t}`); }} className="block w-full cursor-pointer rounded-lg px-2 py-1.5 text-left text-sm hover:bg-slate-50 dark:hover:bg-slate-800">
-              {t}
-            </button>
-          ))}
-        </div>
       </aside>
 
       <section className="card flex h-[75vh] min-h-[480px] flex-col">
@@ -197,8 +199,17 @@ export default function DoubtSolver() {
             <div className="grid h-full place-items-center py-16 text-center text-slate-500">
               <div>
                 <BookOpenCheck className="mx-auto mb-3 h-10 w-10 text-violet-500" />
-                <p className="font-medium text-slate-700 dark:text-slate-200">Ask any {selectedBoard} Class {selectedGrade} doubt</p>
-                <p className="text-sm">Type a question, pick a sample, or upload a textbook photo.</p>
+                {ready ? (
+                  <>
+                    <p className="font-medium text-slate-700 dark:text-slate-200">Ask about {subject.name} · {selectedChapter}</p>
+                    <p className="text-sm">Type a question, pick a sample, or upload a textbook photo.</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="font-medium text-slate-700 dark:text-slate-200">Pick a subject and chapter to start</p>
+                    <p className="text-sm">Answers stay within the {selectedBoard} Class {selectedGrade} chapter you choose.</p>
+                  </>
+                )}
               </div>
             </div>
           )}
@@ -213,7 +224,7 @@ export default function DoubtSolver() {
                 <div className="mb-1 flex items-center gap-1 text-xs font-medium text-slate-500">
                   <Sparkles className="h-3.5 w-3.5 text-violet-500" /> EduGenie
                 </div>
-                {m.answer && <AnswerCard a={m.answer} board={selectedBoard} />}
+                {m.answer && <AnswerCard a={m.answer} board={selectedBoard} kind={m.kind} />}
                 {m.error && (
                   <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300">
                     <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" /> {m.error}
@@ -226,8 +237,14 @@ export default function DoubtSolver() {
         </div>
 
         <div className="border-t border-slate-200 p-3 dark:border-slate-800">
+          {ready && (
+            <div className="mb-2 flex items-center gap-2 text-xs text-slate-500">
+              <span className="chip bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300">{subject.name}</span>
+              <span className="truncate">{selectedChapter}</span>
+            </div>
+          )}
           <div className="mb-2 flex gap-2 overflow-x-auto pb-1">
-            {SAMPLE_CHIPS.map((c) => (
+            {ready && chipsFor(subject.kind, selectedChapter).map((c) => (
               <button key={c} onClick={() => ask(c)} className="chip shrink-0 cursor-pointer bg-slate-100 py-1 text-slate-700 hover:bg-violet-100 dark:bg-slate-800 dark:text-slate-300">
                 <MathText text={c} />
               </button>
@@ -257,16 +274,23 @@ export default function DoubtSolver() {
                 reader.readAsDataURL(f);
               }}
             />
-            <button type="button" onClick={() => fileRef.current?.click()} className="btn-ghost !px-3" aria-label="Upload textbook photo">
+            <button type="button" disabled={!ready} onClick={() => fileRef.current?.click()} className="btn-ghost !px-3" aria-label="Upload textbook photo">
               <ImagePlus className="h-4 w-4" />
             </button>
             <input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your doubt — use $...$ for maths, e.g. $x^2 + 1$"
+              disabled={!ready}
+              placeholder={
+                !ready
+                  ? 'Choose a subject and chapter first'
+                  : subject.kind === 'english' || subject.kind === 'hindi'
+                    ? `Ask about ${selectedChapter} — characters, themes, devices, grammar…`
+                    : 'Type your doubt — use $...$ for maths, e.g. $x^2 + 1$'
+              }
               className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-transparent px-3 py-2 text-sm outline-none focus:border-violet-500 dark:border-slate-700"
             />
-            <button type="submit" disabled={thinking} className="btn-primary !px-3" aria-label="Send">
+            <button type="submit" disabled={thinking || !ready} className="btn-primary !px-3" aria-label="Send">
               <Send className="h-4 w-4" />
             </button>
           </form>

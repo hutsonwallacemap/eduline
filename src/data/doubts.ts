@@ -1,3 +1,5 @@
+import type { SubjectKind } from './curriculum';
+
 const r = String.raw;
 const FENCE = '```';
 
@@ -15,6 +17,7 @@ export interface ChatMessage {
   text?: string;
   image?: string; // object URL of an uploaded photo
   answer?: AiAnswer;
+  kind?: SubjectKind; // subject kind the answer was given for (labels the answer blocks)
   error?: string;
 }
 
@@ -99,7 +102,7 @@ export const SEED_CONVERSATIONS: Conversation[] = [
     meta: 'Class 9 · Science',
     messages: [
       { id: 'm1', role: 'user', text: 'State the law of conservation of mass with an example.' },
-      { id: 'm2', role: 'ai', answer: atoms },
+      { id: 'm2', role: 'ai', answer: atoms, kind: 'science' },
     ],
   },
   {
@@ -108,7 +111,7 @@ export const SEED_CONVERSATIONS: Conversation[] = [
     meta: 'Class 10 · Mathematics',
     messages: [
       { id: 'm3', role: 'user', text: r`Solve: $2x^2 + 5x - 3 = 0$` },
-      { id: 'm4', role: 'ai', answer: quadratic },
+      { id: 'm4', role: 'ai', answer: quadratic, kind: 'math' },
     ],
   },
   {
@@ -117,39 +120,72 @@ export const SEED_CONVERSATIONS: Conversation[] = [
     meta: 'Class 12 · Physics',
     messages: [
       { id: 'm5', role: 'user', text: r`Light of wavelength 400 nm falls on a metal with work function 2.0 eV. Find the stopping potential.` },
-      { id: 'm6', role: 'ai', answer: photoelectric },
+      { id: 'm6', role: 'ai', answer: photoelectric, kind: 'science' },
     ],
   },
 ];
 
-export const SAMPLE_CHIPS = [
-  "Explain Snell's Law with a diagram",
-  r`Solve: $2x^2 + 5x - 3 = 0$`,
-  'State the law of conservation of mass',
-  'Find stopping potential for 400 nm light, φ = 2 eV',
-];
+const dustOfSnow: AiAnswer = {
+  steps: `**Step 1 — Context:** In *Dust of Snow*, Robert Frost describes a crow shaking down snow from a hemlock tree onto the poet, which changes his gloomy mood.
 
-export const TRENDING = [
-  'Ohm’s Law & V–I graph',
-  'Mendelian dihybrid cross',
-  'Trigonometric identities',
-  'Lens formula sign convention',
-  'Nationalism in India: Non-Cooperation',
-];
+**Step 2 — Poetic devices:**
+- **Symbolism:** the crow and the hemlock (a poisonous tree) usually stand for gloom and death; here they bring joy.
+- **Imagery:** "dust of snow" creates a soft, visual picture of small snowflakes.
+- **Rhyme scheme:** ABAB in each stanza (crow / snow, tree / me).
+- **Enjambment:** the single sentence runs across both stanzas.
 
-/** Mock AI: keyword routing to curated, board-checked answers instead of free generation. */
-export function mockAnswer(question: string, image: boolean): AiAnswer {
+**Step 3 — Theme:** small, ordinary moments in nature can lift a person's mood and "save" a day that seemed wasted.`,
+  formula: 'Answer format for poetic devices: **name the device → quote the line → explain its effect** on the mood or meaning.',
+  pitfall: 'Students list devices without quoting the line or explaining the effect. CBSE gives marks for **identification + example + effect**; naming the device alone earns only part marks.',
+  markKeywords: ['symbolism', 'change of mood', 'rhyme scheme ABAB', 'nature as healer'],
+};
+
+const isDemoMatch = (kind: SubjectKind, allowed: SubjectKind[]) => allowed.includes(kind);
+
+/** Sample prompts for the chosen subject and chapter — literature/grammar for languages, never numericals. */
+export function chipsFor(kind: SubjectKind, chapter: string): string[] {
+  const ch = chapter || 'this chapter';
+  switch (kind) {
+    case 'english':
+      return chapter.startsWith('Grammar')
+        ? ['Explain the rules of reported speech with examples', 'Subject–verb agreement: common errors', 'When do we use the present perfect tense?']
+        : chapter.startsWith('Writing')
+          ? ['Format of a formal letter of complaint', 'How to write an analytical paragraph', 'Tips to score full marks in letter writing']
+          : [`Character sketch of the main character in “${ch}”`, `Poetic or literary devices used in “${ch}”`, `Central theme and message of “${ch}”`, `Make 3 comprehension questions on “${ch}”`];
+    case 'hindi':
+      return [`“${ch}” ka saransh (summary)`, `“${ch}” ke mukhya patra ka charitra-chitran`, `“${ch}” ka mool bhaav aur sandesh`];
+    case 'math':
+      return [`Key formulas of “${ch}”`, `Solve a board-level question from “${ch}” step by step`, `Common mistakes in “${ch}”`];
+    case 'science':
+      return [`Explain the main concept of “${ch}” with a diagram`, `Important definitions in “${ch}”`, `A numerical from “${ch}”, solved step by step`];
+    case 'social':
+      return [`Key events and dates in “${ch}”`, `Explain the causes and effects in “${ch}”`, `Important terms from “${ch}”`];
+    case 'commerce':
+      return [`Explain the key concepts of “${ch}” with examples`, `A typical board question from “${ch}”, solved`, `Common mistakes in “${ch}”`];
+    case 'cs':
+      return [`Explain “${ch}” with a Python example`, `Output-based question from “${ch}”`, `Important definitions in “${ch}”`];
+  }
+}
+
+/** Demo answers when the server has no API key: curated answers only within the matching subject. */
+export function mockAnswer(question: string, image: boolean, kind: SubjectKind, subject: string, chapter: string): AiAnswer {
   const q = question.toLowerCase();
-  if (q.includes('snell') || q.includes('refraction')) return snell;
-  if (q.includes('2x^2') || q.includes('quadratic')) return quadratic;
-  if (q.includes('conservation of mass') || q.includes('dalton')) return atoms;
-  if (q.includes('stopping') || q.includes('photoelectric') || q.includes('work function')) return photoelectric;
+  if (isDemoMatch(kind, ['science']) && (q.includes('snell') || q.includes('refraction'))) return snell;
+  if (isDemoMatch(kind, ['math']) && (q.includes('2x^2') || q.includes('quadratic'))) return quadratic;
+  if (isDemoMatch(kind, ['science']) && (q.includes('conservation of mass') || q.includes('dalton'))) return atoms;
+  if (isDemoMatch(kind, ['science']) && (q.includes('stopping') || q.includes('photoelectric'))) return photoelectric;
+  if (kind === 'english' && chapter.toLowerCase().includes('dust of snow')) return dustOfSnow;
+
+  const language = kind === 'english' || kind === 'hindi';
   return {
     steps: image
-      ? 'I’ve read your textbook photo (OCR preview). In the full version, the extracted question is matched to the NCERT chapter and solved step by step here.'
-      : `Here’s how I’d approach **“${question.replace(/\$/g, '')}”**:\n\n1. Identify the chapter and the concept being tested.\n2. Write the governing law or formula.\n3. Substitute the values with units.\n4. State the final answer with its unit, and box it.`,
-    formula: 'Live formula blocks appear once the server has an Anthropic API key (see README).',
-    pitfall: 'Answers are generated from the board syllabus you selected in the header — switch boards to see board-specific marking tips.',
-    markKeywords: ['definition', 'formula', 'units'],
+      ? 'Your textbook photo is attached. Live answers read the photo and solve it step by step once the server has an API key.'
+      : `Demo mode — live answers for **${subject} · ${chapter}** need an API key. A live answer to “${question.replace(/\$/g, '')}” would:\n\n` +
+        (language
+          ? '1. Recall the context of the chapter.\n2. Answer with quotations from the text.\n3. Explain characters, themes or devices.\n4. End with a value-based conclusion.'
+          : '1. Identify the concept being tested.\n2. State the relevant definition, rule or formula.\n3. Work through it step by step.\n4. State the final answer clearly.'),
+    formula: language ? 'The rule, device or answer format used appears here in live answers.' : 'The key formula or rule used appears here in live answers.',
+    pitfall: 'Board-specific marking tips appear here in live answers.',
+    markKeywords: language ? ['context', 'quotation', 'theme'] : ['definition', 'steps', 'final answer'],
   };
 }

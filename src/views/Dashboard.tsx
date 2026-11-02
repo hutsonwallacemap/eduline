@@ -17,7 +17,7 @@ const HERO = {
 };
 
 export default function Dashboard() {
-  const { selectedBoard, selectedGrade, selectedStream, dailyDone, dailyTarget, streak, setView } = useApp();
+  const { selectedBoard, selectedGrade, selectedStream, dailyDone, dailyTarget, streak, setView, setSubject } = useApp();
   const tier = tierOf(selectedGrade);
   const subjects = subjectsFor(selectedGrade, selectedStream);
   const pct = Math.min(100, Math.round((dailyDone / dailyTarget) * 100));
@@ -52,7 +52,10 @@ export default function Dashboard() {
             {subjects.map((sub) => (
               <button
                 key={sub.name}
-                onClick={() => setView('practice', { subject: sub.name })}
+                onClick={() => {
+                  setSubject(sub.name);
+                  setView('practice');
+                }}
                 className="card group cursor-pointer p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md"
               >
                 <span className={`mb-3 grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br ${sub.color} text-white`}>
