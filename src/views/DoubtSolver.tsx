@@ -192,7 +192,7 @@ export default function DoubtSolver() {
         {demoMode && (
           <div className="flex items-center gap-2 border-b border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-200">
             <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-            Demo answers — add ANTHROPIC_API_KEY to .env.local and restart the dev server for live answers from Claude.
+            Demo answers — for live answers from Claude, set ANTHROPIC_API_KEY in .env.local (local) or in the Vercel project’s Environment Variables (deployed), then restart or redeploy.
           </div>
         )}
         <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto p-4">

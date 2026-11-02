@@ -407,7 +407,7 @@ export default function Practice() {
         else
           problem =
             body.error === 'no_credentials'
-              ? 'Add ANTHROPIC_API_KEY to .env.local and restart the dev server to generate questions for any chapter.'
+              ? 'To generate questions for any chapter, set ANTHROPIC_API_KEY in .env.local (local) or in the Vercel project’s Environment Variables (deployed), then restart or redeploy.'
               : apiErrorMessage(res.status, body);
       } catch {
         problem = 'Could not reach the server to generate questions.';

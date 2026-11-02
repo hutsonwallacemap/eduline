@@ -15,7 +15,7 @@ npm run dev
 | Dashboard | `src/views/Dashboard.tsx` | Subjects come from `src/data/curriculum.ts` per grade + stream; a subject card opens Practice with it selected |
 | AI Doubt Solver | `src/views/DoubtSolver.tsx` | Scoped to the chosen subject + chapter; answers split into steps / rule / board pitfall + mark keywords |
 | Practice & Test engine | `src/views/Practice.tsx` | Subject → chapter → timed quiz with palette → report with retry-missed |
-| Sample Papers Vault | `src/views/Papers.tsx`, `src/components/OfficialResources.tsx` | Official CBSE / CISCE / State Board links, plus EduGenie mock papers |
+| Sample Papers Vault | `src/views/Papers.tsx`, `src/components/OfficialResources.tsx` | Official CBSE / CISCE / State Board links, plus 544 real CBSE Class 10/12 sample papers and marking schemes |
 | Formula & Revision | `src/views/Revision.tsx` | Flip-card carousel and printable cheat sheet |
 
 Math anywhere in content uses `$inline$` and `$$display$$`, rendered by `src/components/MathText.tsx`.
@@ -30,7 +30,7 @@ Each subject has a `kind` (`math`, `science`, `english`, `hindi`, `social`, `com
 
 ## Live AI (Claude)
 
-Two endpoints, served by a Vite plugin (`server/plugin.ts`) so the API key stays on the server:
+Two endpoints keep the API key on the server. Locally they run in a Vite plugin (`server/plugin.ts`); on Vercel they run as functions in `api/`. Both call the same code in `server/routes.ts`:
 
 - `POST /api/doubt` (`server/doubt.ts`): the question, an optional textbook photo and the last 10 turns go to `claude-opus-5-5`, scoped to board, class, stream, subject and chapter.
 - `POST /api/practice` (`server/practice.ts`): generates gradable questions (MCQ, assertion-reason, exact short answers) for one subject and chapter.
@@ -47,10 +47,14 @@ Without a key both endpoints return `no_credentials`:
 
 Refused requests are retried on a fallback model server-side (`fallbacks: "default"`); other errors show in the UI.
 
-The endpoints run on `npm run dev` and `npm run preview`. A static host (`dist/` only) has no `/api/*`; deploy `server/` behind a serverless function or Node server there.
+### Deploying on Vercel
+
+`api/doubt.ts` and `api/practice.ts` deploy as Vercel functions automatically (60 s limit, set in `vercel.json`). Add `ANTHROPIC_API_KEY` under **Project Settings → Environment Variables** and redeploy; `.env.local` is not uploaded. Photo uploads are capped at 3 MB to fit Vercel's 4.5 MB request limit.
+
+Other static hosts serve no `/api/*`; the UI then says the AI server isn't running there.
 
 ## Offline data
 
 - `src/data/questions.ts` — offline question bank for Class 10 (Maths, Science, English, Social Science), typed by `src/types/quiz.ts`. Questions are only ever used for their own class, subject and chapter.
 - `src/data/officialLinks.ts` — official board portals (CBSE Academic SQP pages, CISCE, State Boards).
-- `src/data/papers.ts` — generated mock catalogue for timed practice.
+- `src/data/cbseSqp.json` — official CBSE Sample Question Papers and Marking Schemes (Class X and XII, sessions 2023-24 to 2026-27), with links to the PDFs on cbseacademic.nic.in. Collected from CBSE's `SQP_CLASSX_<session>.html` and `SQP_CLASSXII_<session>.html` pages. Papers CBSE had not uploaded (its `error.pdf` placeholder) are left out. Re-collect it each session when CBSE publishes new papers.
