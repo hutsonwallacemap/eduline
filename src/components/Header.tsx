@@ -1,9 +1,10 @@
 import { Flame, Moon, Sparkles, Sun, GraduationCap } from 'lucide-react';
-import { useApp, type View } from '../store';
+import { progressToday, useApp, type View } from '../store';
 import type { Board } from '../types/quiz';
 
 const NAV: { view: View; label: string }[] = [
   { view: 'dashboard', label: 'Dashboard' },
+  { view: 'prep', label: 'Board Prep' },
   { view: 'doubts', label: 'Doubt Solver' },
   { view: 'practice', label: 'Practice' },
   { view: 'revision', label: 'Formula Sheets' },
@@ -12,6 +13,7 @@ const NAV: { view: View; label: string }[] = [
 
 export default function Header() {
   const s = useApp();
+  const { streak } = progressToday(s);
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/85 backdrop-blur dark:border-slate-800 dark:bg-slate-950/85">
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
@@ -50,18 +52,17 @@ export default function Header() {
               <GraduationCap className="h-4 w-4" /> {s.selectedStream}
             </button>
           )}
-          <span className="chip bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300" title="Daily streak">
-            <Flame className="h-3.5 w-3.5" /> {s.streak}
-          </span>
+          {streak > 0 && (
+            <span className="chip bg-orange-100 text-orange-700 dark:bg-orange-500/15 dark:text-orange-300" title={`${streak}-day practice streak`}>
+              <Flame className="h-3.5 w-3.5" /> {streak}
+            </span>
+          )}
           <button onClick={s.toggleTheme} className="rounded-lg p-2 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Toggle theme">
             {s.theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
-          <span className="hidden h-8 w-8 place-items-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-700 sm:grid dark:bg-indigo-500/20 dark:text-indigo-300">
-            AS
-          </span>
         </div>
       </div>
-      <nav className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 pb-2">
+      <nav className="no-scrollbar mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4 pb-2">
         {NAV.map((n) => (
           <button
             key={n.view}

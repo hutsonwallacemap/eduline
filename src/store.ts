@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { Board, QuizConfig } from './types/quiz';
 
 export type Stream = 'General' | 'Science (PCM)' | 'Science (PCB)' | 'Commerce' | 'Humanities';
-export type View = 'dashboard' | 'doubts' | 'practice' | 'revision' | 'papers';
+export type View = 'dashboard' | 'prep' | 'doubts' | 'practice' | 'revision' | 'papers';
 
 interface AppState {
   selectedBoard: Board;
@@ -12,9 +12,10 @@ interface AppState {
   /** Shared by Doubt Solver and Practice so Class -> Subject -> Chapter carries across views. */
   selectedSubject: string | null;
   selectedChapter: string;
-  streak: number;
+  streak: number; // consecutive days with practice
   dailyTarget: number;
-  dailyDone: number;
+  dailyDone: number; // questions answered today
+  lastPracticeDay: string | null; // YYYY-MM-DD
   theme: 'light' | 'dark';
   view: View;
   /** Pre-fills the practice configurator (from a subject card or a sample paper). */
@@ -31,6 +32,18 @@ interface AppState {
   logPractice: (n: number) => void;
 }
 
+const dayKey = (d: Date) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+
+/** Today's count and the streak, ignoring days that have passed since the last practice. */
+export function progressToday(s: Pick<AppState, 'dailyDone' | 'streak' | 'lastPracticeDay'>) {
+  const today = dayKey(new Date());
+  const yesterday = dayKey(new Date(Date.now() - 86_400_000));
+  return {
+    done: s.lastPracticeDay === today ? s.dailyDone : 0,
+    streak: s.lastPracticeDay === today || s.lastPracticeDay === yesterday ? s.streak : 0,
+  };
+}
+
 export const useApp = create<AppState>()(
   persist(
     (set) => ({
@@ -39,9 +52,10 @@ export const useApp = create<AppState>()(
       selectedStream: 'General',
       selectedSubject: null,
       selectedChapter: '',
-      streak: 7,
+      streak: 0,
       dailyTarget: 20,
-      dailyDone: 8,
+      dailyDone: 0,
+      lastPracticeDay: null,
       theme: 'light',
       view: 'dashboard',
       practicePreset: null,
@@ -65,10 +79,19 @@ export const useApp = create<AppState>()(
       },
       setStreamModalOpen: (streamModalOpen) => set({ streamModalOpen }),
       toggleTheme: () => set((s) => ({ theme: s.theme === 'light' ? 'dark' : 'light' })),
-      logPractice: (n) => set((s) => ({ dailyDone: s.dailyDone + n })),
+      logPractice: (n) =>
+        set((s) => {
+          if (n <= 0) return {};
+          const today = dayKey(new Date());
+          if (s.lastPracticeDay === today) return { dailyDone: s.dailyDone + n };
+          const continued = s.lastPracticeDay === dayKey(new Date(Date.now() - 86_400_000));
+          return { dailyDone: n, lastPracticeDay: today, streak: continued ? s.streak + 1 : 1 };
+        }),
     }),
     {
       name: 'edugenie-state',
+      version: 2,
+      migrate: (persisted) => ({ ...(persisted as object), streak: 0, dailyDone: 0, lastPracticeDay: null }) as AppState,
       partialize: (s) => ({
         selectedBoard: s.selectedBoard,
         selectedGrade: s.selectedGrade,
@@ -77,6 +100,7 @@ export const useApp = create<AppState>()(
         selectedChapter: s.selectedChapter,
         streak: s.streak,
         dailyDone: s.dailyDone,
+        lastPracticeDay: s.lastPracticeDay,
         theme: s.theme,
       }),
     },

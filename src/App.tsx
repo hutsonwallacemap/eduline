@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Header from './components/Header';
 import StreamModal from './components/StreamModal';
 import { useApp } from './store';
+import BoardPrep from './views/BoardPrep';
 import Dashboard from './views/Dashboard';
 import DoubtSolver from './views/DoubtSolver';
 import Practice from './views/Practice';
@@ -20,6 +21,7 @@ export default function App() {
       <Header />
       <main className="mx-auto max-w-7xl px-4 py-6">
         {view === 'dashboard' && <Dashboard />}
+        {view === 'prep' && <BoardPrep />}
         {view === 'doubts' && <DoubtSolver />}
         {view === 'practice' && <Practice />}
         {view === 'revision' && <Revision />}

@@ -4,7 +4,7 @@ import MathText from '../components/MathText';
 import SubjectChapterPicker, { useSelectedSubject } from '../components/SubjectChapterPicker';
 import type { SubjectKind } from '../data/curriculum';
 import { chapterQuestions, searchBank } from '../data/bank';
-import { curatedAnswer, SEED_CONVERSATIONS, type AiAnswer, type ChatMessage, type Conversation } from '../data/doubts';
+import { curatedAnswer, type AiAnswer, type ChatMessage, type Conversation } from '../data/doubts';
 import type { Question } from '../types/quiz';
 import { useApp } from '../store';
 
@@ -105,8 +105,8 @@ export default function DoubtSolver() {
   const { selectedBoard, selectedGrade, selectedChapter } = useApp();
   const subject = useSelectedSubject();
   const ready = !!subject && !!selectedChapter;
-  const [convos, setConvos] = useState<Conversation[]>(SEED_CONVERSATIONS);
-  const [activeId, setActiveId] = useState(SEED_CONVERSATIONS[1].id);
+  const [convos, setConvos] = useState<Conversation[]>([]);
+  const [activeId, setActiveId] = useState('new');
   const [input, setInput] = useState('');
   const [thinking, setThinking] = useState(false);
   const [starters, setStarters] = useState<Question[]>([]);
@@ -181,8 +181,9 @@ export default function DoubtSolver() {
           <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">Ask about</h3>
           <SubjectChapterPicker compact />
         </div>
+        {convos.length > 0 && (
         <div className="card p-3">
-          <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Recent doubts</h3>
+          <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Your questions</h3>
           <div className="space-y-1">
             {convos.map((c) => (
               <button
@@ -198,6 +199,7 @@ export default function DoubtSolver() {
             ))}
           </div>
         </div>
+        )}
       </aside>
 
       <section className="card flex h-[75vh] min-h-[480px] flex-col">
@@ -209,7 +211,7 @@ export default function DoubtSolver() {
                 {ready ? (
                   <>
                     <p className="font-medium text-slate-700 dark:text-slate-200">Ask about {subject.name} · {selectedChapter}</p>
-                    <p className="text-sm">Type your question — answers come from CBSE board papers and marking schemes.</p>
+                    <p className="text-sm">Type your question — answers come from CBSE board papers, marking schemes and EduGenie's solved questions.</p>
                   </>
                 ) : (
                   <>

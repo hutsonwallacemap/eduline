@@ -98,35 +98,6 @@ $$\sin r = \frac{\sin 30^\circ}{1.5} = \frac{0.5}{1.5} = 0.333 \Rightarrow r \ap
   markKeywords: ['normal', 'refractive index', 'denser medium'],
 };
 
-export const SEED_CONVERSATIONS: Conversation[] = [
-  {
-    id: 'c1',
-    title: 'Law of conservation of mass',
-    meta: 'Class 9 · Science',
-    messages: [
-      { id: 'm1', role: 'user', text: 'State the law of conservation of mass with an example.' },
-      { id: 'm2', role: 'ai', answer: atoms, kind: 'science' },
-    ],
-  },
-  {
-    id: 'c2',
-    title: r`Solve $2x^2 + 5x - 3 = 0$`,
-    meta: 'Class 10 · Mathematics',
-    messages: [
-      { id: 'm3', role: 'user', text: r`Solve: $2x^2 + 5x - 3 = 0$` },
-      { id: 'm4', role: 'ai', answer: quadratic, kind: 'math' },
-    ],
-  },
-  {
-    id: 'c3',
-    title: 'Stopping potential for 400 nm light',
-    meta: 'Class 12 · Physics',
-    messages: [
-      { id: 'm5', role: 'user', text: r`Light of wavelength 400 nm falls on a metal with work function 2.0 eV. Find the stopping potential.` },
-      { id: 'm6', role: 'ai', answer: photoelectric, kind: 'science' },
-    ],
-  },
-];
 
 const dustOfSnow: AiAnswer = {
   steps: `**Step 1 — Context:** In *Dust of Snow*, Robert Frost describes a crow shaking down snow from a hemlock tree onto the poet, which changes his gloomy mood.

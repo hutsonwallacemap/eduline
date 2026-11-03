@@ -12,6 +12,7 @@ npm run dev
 | View | File | Notes |
 | --- | --- | --- |
 | Shell, board/grade/stream state | `src/store.ts`, `src/components/Header.tsx`, `StreamModal.tsx` | Class 11–12 forces a stream choice; state persists in localStorage |
+| Board Prep | `src/views/BoardPrep.tsx`, `src/data/boardPrep.ts` | Class 10 paper pattern and unit weightage per subject, answer-writing method, common mistakes, important questions with solutions, exam-day time plan and an 8-week plan |
 | Dashboard | `src/views/Dashboard.tsx` | Subjects come from `src/data/curriculum.ts` per grade + stream; a subject card opens Practice with it selected |
 | Doubt Solver | `src/views/DoubtSolver.tsx` | Searches the CBSE question bank within the chosen class, subject and chapter and shows the official marking-scheme answers |
 | Practice & Test engine | `src/views/Practice.tsx` | Subject → chapter → timed quiz with palette → report with retry-missed. MCQ / assertion-reason are auto-graded; written board answers are self-marked against the official scheme |
@@ -25,6 +26,10 @@ Math anywhere in content uses `$inline$` and `$$display$$`, rendered by `src/com
 `selectedSubject` and `selectedChapter` live in the global store next to board, class and stream, so a choice made in the Doubt Solver carries into Practice and back. Changing class or stream clears them.
 
 `src/components/SubjectChapterPicker.tsx` is the shared picker: subject chips, then a chapter box where students type their chapter or pick from suggestions. Suggestions are NCERT chapters per class and subject (`chaptersFor` in `src/data/curriculum.ts`) with the number of bank questions per chapter, plus “All chapters”.
+
+## EduGenie solved questions
+
+`src/data/class10Maths.ts`, `class10Science.ts` and `class10Humanities.ts` hold hand-written Class 10 questions for every chapter of Maths, Science, Social Science and English: MCQs (auto-graded) and written questions with step-by-step model answers in the marking-scheme style. They are merged into the bank with the CBSE questions, so they appear in Practice, the Doubt Solver and Board Prep.
 
 ## CBSE question bank
 

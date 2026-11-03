@@ -1,5 +1,11 @@
 import type { Question, QuestionType } from '../types/quiz';
+import { CLASS10_ENGLISH, CLASS10_SST } from './class10Humanities';
+import { CLASS10_MATHS } from './class10Maths';
+import { CLASS10_SCIENCE } from './class10Science';
 import { QUESTION_BANK } from './questions';
+
+/** EduGenie's own solved questions (hand-written, with model answers). */
+export const AUTHORED: Question[] = [...QUESTION_BANK, ...CLASS10_MATHS, ...CLASS10_SCIENCE, ...CLASS10_SST, ...CLASS10_ENGLISH];
 
 /**
  * Offline question bank: questions and official answers taken from CBSE board papers (2022–2026)
@@ -45,7 +51,7 @@ const toQuestion = (r: BankRecord): Question => ({
 let cache: Promise<Question[]> | null = null;
 
 export function loadBank(): Promise<Question[]> {
-  return (cache ??= import('./bank.json').then((m) => [...QUESTION_BANK, ...(m.default as BankRecord[]).map(toQuestion)]));
+  return (cache ??= import('./bank.json').then((m) => [...AUTHORED, ...(m.default as BankRecord[]).map(toQuestion)]));
 }
 
 const norm = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim();

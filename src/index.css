@@ -29,6 +29,9 @@
   @apply rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm dark:border-slate-700 dark:bg-slate-900;
 }
 
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
 .flip { perspective: 1200px; }
 .flip-inner { transition: transform 0.6s; transform-style: preserve-3d; }
 .flip-inner.flipped { transform: rotateY(180deg); }

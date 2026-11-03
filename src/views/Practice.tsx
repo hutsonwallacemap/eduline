@@ -226,7 +226,7 @@ function LiveQuiz({ cfg, questions, onSubmit }: {
               className="w-full rounded-xl border border-slate-200 bg-transparent px-3 py-2.5 outline-none focus:border-violet-500 dark:border-slate-700"
             />
           )}
-          {q.source && <p className="mt-3 text-xs text-slate-500">From {q.source}</p>}
+          {q.source && <p className="mt-3 text-xs text-slate-500">Source: {q.source}</p>}
 
           {q.hint && (
             <div className="mt-4">
