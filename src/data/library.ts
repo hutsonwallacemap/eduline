@@ -50,7 +50,7 @@ const NOTE_RESOURCES: Resource[] = NOTES.map((n, i) => ({
   url: '',
   format: 'notes',
   noteKey: noteKey(n.subject, n.chapter),
-  language: 'English',
+  language: n.subject === 'Hindi' ? 'Hindi' : 'English',
   description: n.overview.replace(/\$[^$]*\$/g, '…'),
 }));
 

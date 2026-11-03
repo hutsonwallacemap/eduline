@@ -123,7 +123,7 @@ In apartheid South Africa, a black man who tried to fulfil his duty to his peopl
 
 **Flew:** his mother hovered near him with a **piece of fish** but stopped just short. **Maddened by hunger**, he dived at the fish, fell, and then **spread his wings** — and flew.`, 3),
   describe(EN, 'From the Diary of Anne Frank', 'How did Anne turn the punishment from Mr Keesing into a success?',
-    `Mr Keesing gave Anne extra homework for talking in class: essays titled **"A Chatterbox"**, **"An Incorrigible Chatterbox"** and finally **"Quack, Quack, Quack, Chattered Mistress Chatterbox"**.
+    `Mr Keesing gave Anne extra homework for talking in class: essays titled **"A Chatterbox"**, **"An Incorrigible Chatterbox"** and finally **"Quack, Quack, Quack, Said Mistress Chatterbox"**.
 
 Anne argued **talking is a student's trait inherited from her mother**, and wrote the last as a witty **poem**. Mr Keesing **took the joke in the right way** and stopped punishing her.`, 3),
   describe(EN, 'Glimpses of India', 'What traditions associated with bakers in Goa are mentioned in "A Baker from Goa"?',

@@ -20,6 +20,10 @@ export default function NotesReader() {
   if (!note) return null;
   const ncert = ncertChapter(10, note.subject, note.chapter);
   const title = note.chapter.includes(': ') ? note.chapter.split(': ')[1] : note.chapter;
+  const hi = note.subject === 'Hindi';
+  const L = hi
+    ? { key: 'मुख्य बिंदु', formulas: 'सूत्र', terms: 'प्रमुख शब्द', exam: 'परीक्षा की दृष्टि से' }
+    : { key: 'Key points', formulas: 'Formulas', terms: 'Key terms', exam: 'Exam focus' };
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/60 p-4" onClick={() => setOpenNote(null)}>
@@ -38,7 +42,7 @@ export default function NotesReader() {
           <p className="rounded-xl bg-violet-50 p-4 text-base dark:bg-violet-500/10"><MathText text={note.overview} /></p>
 
           <section>
-            <h3 className="mb-2 flex items-center gap-2 font-semibold"><BookOpen className="h-4 w-4 text-emerald-600" /> Key points</h3>
+            <h3 className="mb-2 flex items-center gap-2 font-semibold"><BookOpen className="h-4 w-4 text-emerald-600" /> {L.key}</h3>
             <ul className="space-y-2">
               {note.keyPoints.map((p, i) => (
                 <li key={i} className="flex gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" /><span><MathText text={p} /></span></li>
@@ -48,7 +52,7 @@ export default function NotesReader() {
 
           {note.formulas && (
             <section>
-              <h3 className="mb-2 flex items-center gap-2 font-semibold"><Sigma className="h-4 w-4 text-indigo-600" /> Formulas</h3>
+              <h3 className="mb-2 flex items-center gap-2 font-semibold"><Sigma className="h-4 w-4 text-indigo-600" /> {L.formulas}</h3>
               <div className="space-y-2 rounded-xl border border-slate-200 p-4 dark:border-slate-700">
                 {note.formulas.map((f, i) => <div key={i}><MathText text={f} /></div>)}
               </div>
@@ -57,7 +61,7 @@ export default function NotesReader() {
 
           {note.terms && (
             <section>
-              <h3 className="mb-2 font-semibold">Key terms</h3>
+              <h3 className="mb-2 font-semibold">{L.terms}</h3>
               <dl className="grid gap-2 sm:grid-cols-2">
                 {note.terms.map((t) => (
                   <div key={t.term} className="rounded-lg bg-slate-50 p-3 dark:bg-slate-800/60">
@@ -70,7 +74,7 @@ export default function NotesReader() {
           )}
 
           <section>
-            <h3 className="mb-2 flex items-center gap-2 font-semibold"><Target className="h-4 w-4 text-amber-500" /> Exam focus</h3>
+            <h3 className="mb-2 flex items-center gap-2 font-semibold"><Target className="h-4 w-4 text-amber-500" /> {L.exam}</h3>
             <ul className="space-y-2">
               {note.examFocus.map((p, i) => (
                 <li key={i} className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" /><span><MathText text={p} /></span></li>
