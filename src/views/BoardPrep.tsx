@@ -4,6 +4,7 @@ import MathText from '../components/MathText';
 import SubjectIcon from '../components/SubjectIcon';
 import { AUTHORED } from '../data/bank';
 import { CLASS10_PREP, EIGHT_WEEK_PLAN, NINETY_PLUS, TIME_PLAN } from '../data/boardPrep';
+import { ncertChapter } from '../data/library';
 import { subjectsFor } from '../data/curriculum';
 import { useApp } from '../store';
 
@@ -159,7 +160,12 @@ export default function BoardPrep() {
                   <div key={g.chapter}>
                     <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                       <h3 className="text-sm font-semibold">{g.chapter}</h3>
-                      <button onClick={() => practise(g.chapter)} className="text-xs font-medium text-violet-600 hover:underline">Practise this chapter →</button>
+                      <div className="flex gap-3 text-xs font-medium">
+                        {ncertChapter(10, subjectName, g.chapter) && (
+                          <a href={ncertChapter(10, subjectName, g.chapter)!.url} target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">NCERT chapter ↗</a>
+                        )}
+                        <button onClick={() => practise(g.chapter)} className="text-violet-600 hover:underline">Practise this chapter →</button>
+                      </div>
                     </div>
                     <div className="divide-y divide-slate-200 rounded-xl border border-slate-200 dark:divide-slate-800 dark:border-slate-700">
                       {g.questions.map((q) => (

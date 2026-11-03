@@ -4,6 +4,7 @@ import StreamModal from './components/StreamModal';
 import { useApp } from './store';
 import BoardPrep from './views/BoardPrep';
 import Dashboard from './views/Dashboard';
+import Library from './views/Library';
 import DoubtSolver from './views/DoubtSolver';
 import Practice from './views/Practice';
 import Revision from './views/Revision';
@@ -22,6 +23,7 @@ export default function App() {
       <main className="mx-auto max-w-7xl px-4 py-6">
         {view === 'dashboard' && <Dashboard />}
         {view === 'prep' && <BoardPrep />}
+        {view === 'library' && <Library />}
         {view === 'doubts' && <DoubtSolver />}
         {view === 'practice' && <Practice />}
         {view === 'revision' && <Revision />}

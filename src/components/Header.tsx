@@ -1,10 +1,13 @@
-import { Flame, Moon, Sparkles, Sun, GraduationCap } from 'lucide-react';
+import { Flame, Moon, Search, Sparkles, Sun, GraduationCap } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import SearchDialog from './SearchDialog';
 import { progressToday, useApp, type View } from '../store';
 import type { Board } from '../types/quiz';
 
 const NAV: { view: View; label: string }[] = [
   { view: 'dashboard', label: 'Dashboard' },
   { view: 'prep', label: 'Board Prep' },
+  { view: 'library', label: 'Library' },
   { view: 'doubts', label: 'Doubt Solver' },
   { view: 'practice', label: 'Practice' },
   { view: 'revision', label: 'Formula Sheets' },
@@ -14,7 +17,23 @@ const NAV: { view: View; label: string }[] = [
 export default function Header() {
   const s = useApp();
   const { streak } = progressToday(s);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  // "/" opens search from anywhere except while typing.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const typing = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement;
+      if (e.key === '/' && !typing) {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   return (
+    <>
     <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/85 backdrop-blur dark:border-slate-800 dark:bg-slate-950/85">
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
         <button onClick={() => s.setView('dashboard')} className="flex shrink-0 cursor-pointer items-center gap-2">
@@ -57,6 +76,9 @@ export default function Header() {
               <Flame className="h-3.5 w-3.5" /> {streak}
             </span>
           )}
+          <button onClick={() => setSearchOpen(true)} className="rounded-lg p-2 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Search" title="Search (press /)">
+            <Search className="h-4 w-4" />
+          </button>
           <button onClick={s.toggleTheme} className="rounded-lg p-2 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Toggle theme">
             {s.theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
@@ -78,5 +100,7 @@ export default function Header() {
         ))}
       </nav>
     </header>
+    <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
+    </>
   );
 }

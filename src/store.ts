@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { Board, QuizConfig } from './types/quiz';
 
 export type Stream = 'General' | 'Science (PCM)' | 'Science (PCB)' | 'Commerce' | 'Humanities';
-export type View = 'dashboard' | 'prep' | 'doubts' | 'practice' | 'revision' | 'papers';
+export type View = 'dashboard' | 'prep' | 'library' | 'doubts' | 'practice' | 'revision' | 'papers';
 
 interface AppState {
   selectedBoard: Board;
