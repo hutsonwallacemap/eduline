@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import MathText from '../components/MathText';
 import SubjectChapterPicker, { useSelectedSubject } from '../components/SubjectChapterPicker';
 import type { SubjectKind } from '../data/curriculum';
-import { chapterQuestions, searchBank } from '../data/bank';
+import { chapterQuestions, isOfficial, searchBank } from '../data/bank';
 import { curatedAnswer, type AiAnswer, type ChatMessage, type Conversation } from '../data/doubts';
 import type { Question } from '../types/quiz';
 import { useApp } from '../store';
@@ -83,7 +83,7 @@ function BankAnswer({ q }: { q: Question }) {
       </div>
       <div className="px-3 py-3 text-sm leading-relaxed">
         <div className="mb-1 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-violet-600">
-          <ListOrdered className="h-3.5 w-3.5" /> {q.source ? 'Official answer · CBSE marking scheme' : 'Answer'}
+          <ListOrdered className="h-3.5 w-3.5" /> {isOfficial(q) ? 'Official answer · CBSE marking scheme' : 'Model answer · EduGenie'}
         </div>
         {q.explanation ? (
           <div className="whitespace-pre-line"><MathText text={q.explanation} /></div>
@@ -235,7 +235,7 @@ export default function DoubtSolver() {
                 {m.notice && <p className="mb-2 text-sm text-slate-600 dark:text-slate-300">{m.notice}</p>}
                 {m.matches && !m.asSuggestions && (
                   <div className="space-y-3">
-                    {m.matches.length > 1 && <p className="text-sm text-slate-600 dark:text-slate-300">Closest board questions and their official answers:</p>}
+                    {m.matches.length > 1 && <p className="text-sm text-slate-600 dark:text-slate-300">Closest questions and their answers:</p>}
                     {m.matches.map((q) => <BankAnswer key={q.id} q={q} />)}
                   </div>
                 )}

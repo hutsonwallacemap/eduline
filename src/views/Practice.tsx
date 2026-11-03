@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import MathText from '../components/MathText';
 import SubjectChapterPicker, { useSelectedSubject } from '../components/SubjectChapterPicker';
 import { subjectsFor } from '../data/curriculum';
-import { ALL_CHAPTERS, pickQuestions } from '../data/bank';
+import { ALL_CHAPTERS, isOfficial, pickQuestions } from '../data/bank';
 import { isCorrect } from '../data/questions';
 import { useApp } from '../store';
 import type { AnswerRecord, Difficulty, Question, QuestionType, QuizConfig } from '../types/quiz';
@@ -374,7 +374,7 @@ function Report({ cfg, questions, answers, timeUsedSec, onRetryMissed, onNew }: 
                 </summary>
                 <div className="ml-8 mt-3 rounded-xl bg-slate-50 p-3 text-sm dark:bg-slate-800/60">
                   <div className="mb-1 text-xs font-semibold uppercase tracking-wide text-violet-600">
-                    {q.source ? 'Official answer (CBSE marking scheme)' : 'Step-by-step solution'}
+                    {isOfficial(q) ? 'Official answer (CBSE marking scheme)' : 'Step-by-step solution'}
                   </div>
                   {q.explanation ? <div className="whitespace-pre-line"><MathText text={q.explanation} /></div> : <p className="text-slate-500">The marking scheme gives only the answer option for this question.</p>}
                   {written && (

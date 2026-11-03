@@ -1,11 +1,12 @@
 import type { Question, QuestionType } from '../types/quiz';
+import { CLASS10_HINDI } from './class10Hindi';
 import { CLASS10_ENGLISH, CLASS10_SST } from './class10Humanities';
 import { CLASS10_MATHS } from './class10Maths';
 import { CLASS10_SCIENCE } from './class10Science';
 import { QUESTION_BANK } from './questions';
 
 /** EduGenie's own solved questions (hand-written, with model answers). */
-export const AUTHORED: Question[] = [...QUESTION_BANK, ...CLASS10_MATHS, ...CLASS10_SCIENCE, ...CLASS10_SST, ...CLASS10_ENGLISH];
+export const AUTHORED: Question[] = [...QUESTION_BANK, ...CLASS10_MATHS, ...CLASS10_SCIENCE, ...CLASS10_SST, ...CLASS10_ENGLISH, ...CLASS10_HINDI];
 
 /**
  * Offline question bank: questions and official answers taken from CBSE board papers (2022–2026)
@@ -29,6 +30,9 @@ interface BankRecord {
 }
 
 export const ALL_CHAPTERS = 'All chapters';
+
+/** True for questions taken from CBSE papers, whose answer is CBSE's own marking scheme. */
+export const isOfficial = (q: Question) => !!q.schemeUrl;
 export const MIXED_CHAPTER = 'Mixed (board paper)';
 
 const toQuestion = (r: BankRecord): Question => ({
@@ -91,7 +95,10 @@ export async function chapterCounts(grade: number, subject: string) {
 const STOP = new Set(
   'the a an of to in is are was were and or for on by with as at be this that which what from it its into than then their his her they he she we you your our not no all any each following given above below why how explain define write state describe give two three what\'s mention name find'.split(' '),
 );
-const tokens = (s: string) => norm(s).match(/[a-z0-9]+/g)?.filter((w) => w.length > 2 && !STOP.has(w)) ?? [];
+// Letters, vowel signs (Devanagari matras) and digits, so Hindi questions are searchable too.
+const HINDI_STOP = new Set('का की के को में से है हैं और या पर ने भी यह वह इस उस क्या क्यों कैसे किस कौन लिए एक तो था थी थे'.split(' '));
+const tokens = (s: string) =>
+  norm(s).match(/[\p{L}\p{M}\p{N}]+/gu)?.filter((w) => w.length > 2 && !STOP.has(w) && !HINDI_STOP.has(w)) ?? [];
 
 /** Board questions closest to what the student typed, within their class, subject and chapter. */
 export async function searchBank(grade: number, subject: string, chapter: string, query: string, limit = 3): Promise<Question[]> {

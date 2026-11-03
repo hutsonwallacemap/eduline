@@ -29,7 +29,7 @@ Math anywhere in content uses `$inline$` and `$$display$$`, rendered by `src/com
 
 ## EduGenie solved questions
 
-`src/data/class10Maths.ts`, `class10Science.ts` and `class10Humanities.ts` hold hand-written Class 10 questions for every chapter of Maths, Science, Social Science and English: MCQs (auto-graded) and written questions with step-by-step model answers in the marking-scheme style. They are merged into the bank with the CBSE questions, so they appear in Practice, the Doubt Solver and Board Prep.
+`src/data/class10Maths.ts`, `class10Science.ts` and `class10Humanities.ts` and `class10Hindi.ts` hold hand-written Class 10 questions for every chapter of Maths, Science, Social Science, English and Hindi (Kshitij, Kritika, grammar and writing): MCQs (auto-graded) and written questions with step-by-step model answers in the marking-scheme style. They are merged into the bank with the CBSE questions, so they appear in Practice, the Doubt Solver and Board Prep.
 
 ## CBSE question bank
 
