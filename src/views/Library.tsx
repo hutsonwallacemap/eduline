@@ -1,8 +1,9 @@
 import { BadgeCheck, BookOpen, Download, FileText, Globe, Info, Library as LibraryIcon, Search, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { HostedPdfButtons } from '../components/HostedPdfList';
 import SubjectIcon from '../components/SubjectIcon';
 import { subjectsFor } from '../data/curriculum';
-import { hostOf, LIBRARY, RESOURCE_KINDS, type Resource, type ResourceKind } from '../data/library';
+import { coversChapter, hostOf, LIBRARY, RESOURCE_KINDS, type Resource, type ResourceKind } from '../data/library';
 import { useApp } from '../store';
 
 const KIND_TINT: Record<ResourceKind, string> = {
@@ -15,6 +16,13 @@ const KIND_TINT: Record<ResourceKind, string> = {
   'Important Questions': 'bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300',
   'NCERT Solutions': 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-300',
   'Learning Platform': 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300',
+  'Revision Notes': 'bg-pink-50 text-pink-700 dark:bg-pink-500/10 dark:text-pink-300',
+  'Chapter-wise PYQs': 'bg-orange-50 text-orange-700 dark:bg-orange-500/10 dark:text-orange-300',
+  Worksheet: 'bg-lime-50 text-lime-700 dark:bg-lime-500/10 dark:text-lime-300',
+  'Practice Paper': 'bg-cyan-50 text-cyan-700 dark:bg-cyan-500/10 dark:text-cyan-300',
+  'School Exam Paper': 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300',
+  'CBSE Board Paper': 'bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300',
+  'CBSE Sample Paper': 'bg-rose-50 text-rose-700 dark:bg-rose-500/10 dark:text-rose-300',
 };
 
 function ResourceCard({ r }: { r: Resource }) {
@@ -26,18 +34,25 @@ function ResourceCard({ r }: { r: Resource }) {
         {r.official && (
           <span className="chip bg-emerald-600 text-white"><BadgeCheck className="h-3 w-3" /> Official</span>
         )}
-        {r.format === 'pdf' && <span className="chip bg-slate-100 dark:bg-slate-800"><FileText className="h-3 w-3" /> PDF{r.pages ? ` · ${r.pages} pages` : ''}</span>}
+        {(r.format === 'pdf' || r.format === 'hosted') && <span className="chip bg-slate-100 dark:bg-slate-800"><FileText className="h-3 w-3" /> PDF{r.pages ? ` · ${r.pages} pages` : ''}</span>}
+        {r.language !== 'English' && r.format === 'hosted' && <span className="chip bg-slate-100 dark:bg-slate-800">{r.language}</span>}
       </div>
       <h3 className="font-medium leading-snug">{r.title}</h3>
       <p className="mt-1 flex-1 text-sm text-slate-500">{r.description}</p>
       <div className="mt-2 text-xs text-slate-500">
-        {r.format === 'notes' ? 'Original EduGenie notes · CBSE 2026-27 syllabus' : `${r.source} · ${hostOf(r.url)}${r.year ? ` · ${r.year}` : ''}`}
+        {r.format === 'notes'
+          ? 'Original EduGenie notes · CBSE 2026-27 syllabus'
+          : r.format === 'hosted'
+            ? `${r.source}${r.year ? ` · ${r.year}` : ''} · ${r.chapter ?? (r.chapters?.length ? `${r.chapters.length} chapters` : 'full syllabus')}`
+            : `${r.source} · ${hostOf(r.url)}${r.year ? ` · ${r.year}` : ''}`}
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
         {r.format === 'notes' ? (
           <button onClick={() => setOpenNote(r.noteKey!)} className="btn-primary !px-3 !py-1.5">
             <BookOpen className="h-4 w-4" /> Read notes
           </button>
+        ) : r.format === 'hosted' ? (
+          <HostedPdfButtons r={r} />
         ) : (
         <>
         <a href={r.url} target="_blank" rel="noopener noreferrer" className="btn-primary !px-3 !py-1.5">
@@ -72,7 +87,7 @@ export default function Library() {
       (r) =>
         (subject === 'All' || r.subject === subject || r.subject === 'All subjects') &&
         (kind === 'All' || r.kind === kind) &&
-        (chapter === 'All' || r.chapter === chapter) &&
+        (chapter === 'All' || coversChapter(r, chapter)) &&
         (!officialOnly || r.official) &&
         words.every((w) => `${r.title} ${r.subject} ${r.chapter ?? ''} ${r.kind} ${r.source}`.toLowerCase().includes(w)),
     );
@@ -93,9 +108,9 @@ export default function Library() {
     <div className="space-y-6">
       <section className="rounded-3xl bg-gradient-to-br from-sky-600 to-indigo-700 p-6 text-white sm:p-8">
         <div className="mb-2 flex items-center gap-2 text-sm text-white/80"><LibraryIcon className="h-4 w-4" /> Digital Library</div>
-        <h1 className="text-2xl font-bold sm:text-3xl">Every Class 10 book, syllabus and notes page in one place</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">Every Class 10 book, paper and notes PDF in one place</h1>
         <p className="mt-2 max-w-2xl text-white/85">
-          {LIBRARY.length} resources: EduGenie’s own chapter notes, NCERT textbooks and exemplars, the CBSE 2026-27 syllabus, and free notes and mind maps from publishers — filtered by subject and chapter.
+          {LIBRARY.length} resources: EduGenie’s own chapter notes and mind maps, revision notes, chapter-wise board questions, worksheets, CBSE and school exam papers you can read right here, plus NCERT books and the CBSE 2026-27 syllabus — filtered by subject and chapter.
         </p>
         <div className="mt-4 flex flex-wrap gap-2 text-xs">
           {RESOURCE_KINDS.filter((k) => counts[k]).map((k) => (
@@ -160,7 +175,7 @@ export default function Library() {
       )}
 
       <p className="text-xs text-slate-500">
-        Official PDFs open on ncert.nic.in and cbseacademic.nic.in, which don’t allow their files to be shown inside other websites. Notes, mind maps and solutions are free pages from their publishers (PW, Oswaal, Educart, EduRev) and belong to them; EduGenie links to them and is not affiliated.
+        PDFs marked “Read” open inside EduGenie and can be downloaded for offline study; they are shared with permission and credit their makers (Hunny Tutorials, METAPHASE, the schools named, CBSE). NCERT books and the syllabus open on ncert.nic.in and cbseacademic.nic.in. Publisher notes, mind maps and solutions (PW, Oswaal, Educart, EduRev) are linked, not copied; EduGenie is not affiliated with them.
       </p>
     </div>
   );

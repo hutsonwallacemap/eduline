@@ -23,6 +23,9 @@ interface AppState {
   streamModalOpen: boolean;
   openNote: string | null; // "subject|chapter" of the chapter notes shown in the reader
   setOpenNote: (key: string | null) => void;
+  /** A hosted PDF shown in the in-app reader. */
+  openPdf: { title: string; url: string } | null;
+  setOpenPdf: (pdf: { title: string; url: string } | null) => void;
   setBoard: (b: Board) => void;
   setGrade: (g: number) => void;
   setStream: (s: Stream) => void;
@@ -64,6 +67,8 @@ export const useApp = create<AppState>()(
       streamModalOpen: false,
       openNote: null,
       setOpenNote: (openNote) => set({ openNote }),
+      openPdf: null,
+      setOpenPdf: (openPdf) => set({ openPdf }),
       setBoard: (selectedBoard) => set({ selectedBoard }),
       setGrade: (selectedGrade) =>
         set((s) => {

@@ -1,0 +1,990 @@
+[
+ {
+  "slug": "science/acids-bases-salts-revision-notes",
+  "kind": "Revision Notes",
+  "subject": "Science",
+  "title": "Acids, Bases and Salts — topper revision notes",
+  "source": "Shared notes",
+  "description": "Indicators, reactions of acids and bases, the pH scale and the five important salts, in quick revision form.",
+  "chapters": [
+   "Acids, Bases and Salts"
+  ],
+  "year": null,
+  "language": "Hinglish",
+  "official": false,
+  "id": "up0",
+  "url": "/pdfs/science/acids-bases-salts-revision-notes.pdf",
+  "pages": 6
+ },
+ {
+  "slug": "science/metals-non-metals-revision-notes",
+  "kind": "Revision Notes",
+  "subject": "Science",
+  "title": "Metals and Non-metals — topper revision notes",
+  "source": "Shared notes",
+  "description": "Properties, the reactivity series, ionic compounds, extraction and corrosion, condensed for revision.",
+  "chapters": [
+   "Metals and Non-metals"
+  ],
+  "year": null,
+  "language": "Hinglish",
+  "official": false,
+  "id": "up1",
+  "url": "/pdfs/science/metals-non-metals-revision-notes.pdf",
+  "pages": 6
+ },
+ {
+  "slug": "science/life-processes-revision-notes",
+  "kind": "Revision Notes",
+  "subject": "Science",
+  "title": "Life Processes (nutrition and respiration) — topper revision notes",
+  "source": "Shared notes",
+  "description": "Autotrophic and human nutrition, aerobic and anaerobic respiration, with the diagrams to remember.",
+  "chapters": [
+   "Life Processes"
+  ],
+  "year": null,
+  "language": "Hinglish",
+  "official": false,
+  "id": "up2",
+  "url": "/pdfs/science/life-processes-revision-notes.pdf",
+  "pages": 8
+ },
+ {
+  "slug": "science/light-revision-notes",
+  "kind": "Revision Notes",
+  "subject": "Science",
+  "title": "Light — Reflection and Refraction — topper revision notes",
+  "source": "Shared notes",
+  "description": "Mirror and lens rules, sign convention, ray diagrams and the formulas in one place.",
+  "chapters": [
+   "Light – Reflection and Refraction"
+  ],
+  "year": null,
+  "language": "Hinglish",
+  "official": false,
+  "id": "up3",
+  "url": "/pdfs/science/light-revision-notes.pdf",
+  "pages": 6
+ },
+ {
+  "slug": "science/human-eye-revision-notes",
+  "kind": "Revision Notes",
+  "subject": "Science",
+  "title": "The Human Eye and the Colourful World — topper revision notes",
+  "source": "Shared notes",
+  "description": "Parts of the eye, defects and their correction, dispersion, scattering and atmospheric refraction.",
+  "chapters": [
+   "The Human Eye and the Colourful World"
+  ],
+  "year": null,
+  "language": "Hinglish",
+  "official": false,
+  "id": "up4",
+  "url": "/pdfs/science/human-eye-revision-notes.pdf",
+  "pages": 6
+ },
+ {
+  "slug": "science/our-environment-revision-notes",
+  "kind": "Revision Notes",
+  "subject": "Science",
+  "title": "Our Environment — revision notes",
+  "source": "Shared notes",
+  "description": "Ecosystems, food chains and webs, the 10% law, biological magnification, ozone and waste management.",
+  "chapters": [
+   "Our Environment"
+  ],
+  "year": null,
+  "language": "English",
+  "official": false,
+  "id": "up5",
+  "url": "/pdfs/science/our-environment-revision-notes.pdf",
+  "pages": 12
+ },
+ {
+  "slug": "science/our-environment-visual-notes",
+  "kind": "Revision Notes",
+  "subject": "Science",
+  "title": "Our Environment — visual notes",
+  "source": "Shared notes",
+  "description": "The same chapter as colourful visual notes with flow charts — good for a last look before the exam.",
+  "chapters": [
+   "Our Environment"
+  ],
+  "year": null,
+  "language": "English",
+  "official": false,
+  "id": "up6",
+  "url": "/pdfs/science/our-environment-visual-notes.pdf",
+  "pages": 12
+ },
+ {
+  "slug": "science/heredity-handwritten-notes",
+  "kind": "Revision Notes",
+  "subject": "Science",
+  "title": "Heredity — hand-written notes",
+  "source": "METAPHASE",
+  "description": "Traits and variation, Mendel’s experiments, monohybrid and dihybrid crosses, and sex determination.",
+  "chapters": [
+   "Heredity"
+  ],
+  "year": null,
+  "language": "English",
+  "official": false,
+  "id": "up7",
+  "url": "/pdfs/science/heredity-handwritten-notes.pdf",
+  "pages": 8
+ },
+ {
+  "slug": "social-science/5-minute-revision-sheets",
+  "kind": "Revision Notes",
+  "subject": "Social Science",
+  "title": "Social Science 5-minute revision sheets (9 high-value chapters)",
+  "source": "Shared notes",
+  "description": "One sheet per chapter: the key facts, dates and answer points for nine chapters that carry the most marks.",
+  "chapters": [
+   "History: The Rise of Nationalism in Europe",
+   "History: Nationalism in India",
+   "Geography: Forest and Wildlife Resources",
+   "Geography: Water Resources",
+   "Civics: Federalism",
+   "Civics: Gender, Religion and Caste",
+   "Economics: Sectors of the Indian Economy",
+   "Economics: Money and Credit",
+   "Economics: Globalisation and the Indian Economy"
+  ],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up8",
+  "url": "/pdfs/social-science/5-minute-revision-sheets.pdf",
+  "pages": 10
+ },
+ {
+  "slug": "science/chemical-reactions-board-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Chemical Reactions and Equations — board questions 2022–26",
+  "source": "Hunny Tutorials",
+  "description": "CBSE board questions 2022–2026, collected chapter-wise.",
+  "chapters": [
+   "Chemical Reactions and Equations"
+  ],
+  "year": "2022–2026",
+  "language": "English",
+  "official": false,
+  "id": "up9",
+  "url": "/pdfs/science/chemical-reactions-board-questions.pdf",
+  "pages": 9
+ },
+ {
+  "slug": "science/acids-bases-salts-board-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Acids, Bases and Salts — board questions 2022–26",
+  "source": "Hunny Tutorials",
+  "description": "CBSE board questions 2022–2026, collected chapter-wise.",
+  "chapters": [
+   "Acids, Bases and Salts"
+  ],
+  "year": "2022–2026",
+  "language": "English",
+  "official": false,
+  "id": "up10",
+  "url": "/pdfs/science/acids-bases-salts-board-questions.pdf",
+  "pages": 13
+ },
+ {
+  "slug": "science/chemistry-ch1-2-sample-paper-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Chemical Reactions + Acids, Bases and Salts — sample-paper questions 2019–25",
+  "source": "Hunny Tutorials",
+  "description": "CBSE sample-paper questions 2019–2025, collected chapter-wise.",
+  "chapters": [
+   "Chemical Reactions and Equations",
+   "Acids, Bases and Salts"
+  ],
+  "year": "2019–2025",
+  "language": "English",
+  "official": false,
+  "id": "up11",
+  "url": "/pdfs/science/chemistry-ch1-2-sample-paper-questions.pdf",
+  "pages": 9
+ },
+ {
+  "slug": "science/chemistry-ch3-4-sample-paper-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Metals and Non-metals + Carbon — sample-paper questions 2019–25",
+  "source": "Hunny Tutorials",
+  "description": "CBSE sample-paper questions 2019–2025, collected chapter-wise.",
+  "chapters": [
+   "Metals and Non-metals",
+   "Carbon and its Compounds"
+  ],
+  "year": "2019–2025",
+  "language": "English",
+  "official": false,
+  "id": "up12",
+  "url": "/pdfs/science/chemistry-ch3-4-sample-paper-questions.pdf",
+  "pages": 10
+ },
+ {
+  "slug": "science/life-processes-board-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Life Processes — board questions 2022–26",
+  "source": "Hunny Tutorials",
+  "description": "CBSE board questions 2022–2026, collected chapter-wise.",
+  "chapters": [
+   "Life Processes"
+  ],
+  "year": "2022–2026",
+  "language": "English",
+  "official": false,
+  "id": "up13",
+  "url": "/pdfs/science/life-processes-board-questions.pdf",
+  "pages": 14
+ },
+ {
+  "slug": "science/control-coordination-board-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Control and Coordination — board questions 2022–26",
+  "source": "Hunny Tutorials",
+  "description": "CBSE board questions 2022–2026, collected chapter-wise.",
+  "chapters": [
+   "Control and Coordination"
+  ],
+  "year": "2022–2026",
+  "language": "English",
+  "official": false,
+  "id": "up14",
+  "url": "/pdfs/science/control-coordination-board-questions.pdf",
+  "pages": 10
+ },
+ {
+  "slug": "science/biology-ch5-6-sample-paper-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Life Processes + Control and Coordination — sample-paper questions 2019–25",
+  "source": "Hunny Tutorials",
+  "description": "CBSE sample-paper questions 2019–2025, collected chapter-wise.",
+  "chapters": [
+   "Life Processes",
+   "Control and Coordination"
+  ],
+  "year": "2019–2025",
+  "language": "English",
+  "official": false,
+  "id": "up15",
+  "url": "/pdfs/science/biology-ch5-6-sample-paper-questions.pdf",
+  "pages": 8
+ },
+ {
+  "slug": "science/biology-ch7-8-sample-paper-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Reproduction + Heredity — sample-paper questions 2019–25",
+  "source": "Hunny Tutorials",
+  "description": "CBSE sample-paper questions 2019–2025, collected chapter-wise.",
+  "chapters": [
+   "How do Organisms Reproduce?",
+   "Heredity"
+  ],
+  "year": "2019–2025",
+  "language": "English",
+  "official": false,
+  "id": "up16",
+  "url": "/pdfs/science/biology-ch7-8-sample-paper-questions.pdf",
+  "pages": 7
+ },
+ {
+  "slug": "science/our-environment-sample-paper-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Our Environment — sample-paper questions 2019–25",
+  "source": "Hunny Tutorials",
+  "description": "CBSE sample-paper questions 2019–2025, collected chapter-wise.",
+  "chapters": [
+   "Our Environment"
+  ],
+  "year": "2019–2025",
+  "language": "English",
+  "official": false,
+  "id": "up17",
+  "url": "/pdfs/science/our-environment-sample-paper-questions.pdf",
+  "pages": 4
+ },
+ {
+  "slug": "science/light-board-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Light — Reflection and Refraction — board questions 2022–26",
+  "source": "Hunny Tutorials",
+  "description": "CBSE board questions 2022–2026, collected chapter-wise.",
+  "chapters": [
+   "Light – Reflection and Refraction"
+  ],
+  "year": "2022–2026",
+  "language": "English",
+  "official": false,
+  "id": "up18",
+  "url": "/pdfs/science/light-board-questions.pdf",
+  "pages": 16
+ },
+ {
+  "slug": "science/human-eye-board-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "The Human Eye — board questions 2022–26",
+  "source": "Hunny Tutorials",
+  "description": "CBSE board questions 2022–2026, collected chapter-wise.",
+  "chapters": [
+   "The Human Eye and the Colourful World"
+  ],
+  "year": "2022–2026",
+  "language": "English",
+  "official": false,
+  "id": "up19",
+  "url": "/pdfs/science/human-eye-board-questions.pdf",
+  "pages": 9
+ },
+ {
+  "slug": "science/magnetic-effects-board-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Magnetic Effects of Electric Current — board questions 2022–26",
+  "source": "Hunny Tutorials",
+  "description": "CBSE board questions 2022–2026, collected chapter-wise.",
+  "chapters": [
+   "Magnetic Effects of Electric Current"
+  ],
+  "year": "2022–2026",
+  "language": "English",
+  "official": false,
+  "id": "up20",
+  "url": "/pdfs/science/magnetic-effects-board-questions.pdf",
+  "pages": 12
+ },
+ {
+  "slug": "science/light-eye-sample-paper-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Light + Human Eye — sample-paper questions 2019–25",
+  "source": "Hunny Tutorials",
+  "description": "CBSE sample-paper questions 2019–2025, collected chapter-wise.",
+  "chapters": [
+   "Light – Reflection and Refraction",
+   "The Human Eye and the Colourful World"
+  ],
+  "year": "2019–2025",
+  "language": "English",
+  "official": false,
+  "id": "up21",
+  "url": "/pdfs/science/light-eye-sample-paper-questions.pdf",
+  "pages": 9
+ },
+ {
+  "slug": "science/electricity-magnetic-sample-paper-questions",
+  "kind": "Chapter-wise PYQs",
+  "subject": "Science",
+  "title": "Electricity + Magnetic Effects — sample-paper questions 2022–25",
+  "source": "Hunny Tutorials",
+  "description": "CBSE sample-paper questions 2022–2025, collected chapter-wise.",
+  "chapters": [
+   "Electricity",
+   "Magnetic Effects of Electric Current"
+  ],
+  "year": "2022–2025",
+  "language": "English",
+  "official": false,
+  "id": "up22",
+  "url": "/pdfs/science/electricity-magnetic-sample-paper-questions.pdf",
+  "pages": 10
+ },
+ {
+  "slug": "mathematics/circles-ncert-solutions",
+  "kind": "NCERT Solutions",
+  "subject": "Mathematics",
+  "title": "Circles — NCERT solutions (hand-written)",
+  "source": "Hunny Tutorials",
+  "description": "Step-by-step solutions to the NCERT exercises on tangents to a circle.",
+  "chapters": [
+   "Circles"
+  ],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up23",
+  "url": "/pdfs/mathematics/circles-ncert-solutions.pdf",
+  "pages": 8
+ },
+ {
+  "slug": "mathematics/circles-important-questions",
+  "kind": "Important Questions",
+  "subject": "Mathematics",
+  "title": "Circles — 10 solved + 10 unsolved important questions",
+  "source": "Hunny Tutorials",
+  "description": "Exam-oriented tangent questions on the latest CBSE pattern: work through the solved ones, then try the rest.",
+  "chapters": [
+   "Circles"
+  ],
+  "year": null,
+  "language": "English",
+  "official": false,
+  "id": "up24",
+  "url": "/pdfs/mathematics/circles-important-questions.pdf",
+  "pages": 7
+ },
+ {
+  "slug": "mathematics/areas-related-to-circles-quick-material",
+  "kind": "Revision Notes",
+  "subject": "Mathematics",
+  "title": "Areas Related to Circles — quick study material",
+  "source": "Hunny Tutorials",
+  "description": "Sector, segment and arc formulas with worked examples, ready for quick revision.",
+  "chapters": [
+   "Areas Related to Circles"
+  ],
+  "year": null,
+  "language": "English",
+  "official": false,
+  "id": "up25",
+  "url": "/pdfs/mathematics/areas-related-to-circles-quick-material.pdf",
+  "pages": 10
+ },
+ {
+  "slug": "mathematics/areas-related-to-circles-test",
+  "kind": "Worksheet",
+  "subject": "Mathematics",
+  "title": "Areas Related to Circles — assignment test",
+  "source": "Hunny Tutorials",
+  "description": "A short chapter test to check yourself after revising the chapter.",
+  "chapters": [
+   "Areas Related to Circles"
+  ],
+  "year": null,
+  "language": "English",
+  "official": false,
+  "id": "up26",
+  "url": "/pdfs/mathematics/areas-related-to-circles-test.pdf",
+  "pages": 2
+ },
+ {
+  "slug": "mathematics/real-numbers-worksheet",
+  "kind": "Worksheet",
+  "subject": "Mathematics",
+  "title": "Real Numbers — worksheet",
+  "source": "Shared worksheet",
+  "description": "MCQs, assertion–reason and short questions on HCF, LCM, prime factorisation and irrational numbers.",
+  "chapters": [
+   "Real Numbers"
+  ],
+  "year": null,
+  "language": "English",
+  "official": false,
+  "id": "up27",
+  "url": "/pdfs/mathematics/real-numbers-worksheet.pdf",
+  "pages": 2
+ },
+ {
+  "slug": "mathematics/polynomials-worksheet",
+  "kind": "Worksheet",
+  "subject": "Mathematics",
+  "title": "Polynomials — worksheet",
+  "source": "Shared worksheet",
+  "description": "Graph-based zero questions and the relation between zeroes and coefficients.",
+  "chapters": [
+   "Polynomials"
+  ],
+  "year": null,
+  "language": "English",
+  "official": false,
+  "id": "up28",
+  "url": "/pdfs/mathematics/polynomials-worksheet.pdf",
+  "pages": 2
+ },
+ {
+  "slug": "mathematics/case-study-question-booklet",
+  "kind": "Worksheet",
+  "subject": "Mathematics",
+  "title": "Case-study question booklet (11 chapters, 50 pages)",
+  "source": "Shared worksheet",
+  "description": "Real-life case-study questions — the 4-mark Section E type — for 11 chapters, from Real Numbers to Probability.",
+  "chapters": [
+   "Real Numbers",
+   "Polynomials",
+   "Pair of Linear Equations in Two Variables",
+   "Quadratic Equations",
+   "Arithmetic Progressions",
+   "Triangles",
+   "Some Applications of Trigonometry",
+   "Areas Related to Circles",
+   "Surface Areas and Volumes",
+   "Statistics",
+   "Probability"
+  ],
+  "year": null,
+  "language": "English",
+  "official": false,
+  "id": "up29",
+  "url": "/pdfs/mathematics/case-study-question-booklet.pdf",
+  "pages": 50
+ },
+ {
+  "slug": "mathematics/midterm-important-questions",
+  "kind": "Important Questions",
+  "subject": "Mathematics",
+  "title": "Mid-term important questions (8 chapters)",
+  "source": "Shared practice set",
+  "description": "CBSE-style practice questions for the mid-term chapters, grouped chapter by chapter.",
+  "chapters": [
+   "Real Numbers",
+   "Polynomials",
+   "Pair of Linear Equations in Two Variables",
+   "Quadratic Equations",
+   "Arithmetic Progressions",
+   "Coordinate Geometry",
+   "Areas Related to Circles",
+   "Triangles"
+  ],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up30",
+  "url": "/pdfs/mathematics/midterm-important-questions.pdf",
+  "pages": 8
+ },
+ {
+  "slug": "mathematics/midterm-practice-paper-2026-27",
+  "kind": "Practice Paper",
+  "subject": "Mathematics",
+  "title": "Mathematics mid-term practice paper 2026-27",
+  "source": "Shared practice paper",
+  "description": "A full 80-mark paper in the CBSE pattern for mid-term practice.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up31",
+  "url": "/pdfs/mathematics/midterm-practice-paper-2026-27.pdf",
+  "pages": 3
+ },
+ {
+  "slug": "english/midterm-practice-paper-2026-27",
+  "kind": "Practice Paper",
+  "subject": "English",
+  "title": "English mid-term practice paper 2026-27",
+  "source": "Shared practice paper",
+  "description": "A full 80-mark English Language & Literature paper in the CBSE pattern.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up32",
+  "url": "/pdfs/english/midterm-practice-paper-2026-27.pdf",
+  "pages": 5
+ },
+ {
+  "slug": "information-technology/libreoffice-base-practicals",
+  "kind": "Worksheet",
+  "subject": "Information Technology",
+  "title": "LibreOffice Base practicals (IT 402)",
+  "source": "Shared notes",
+  "description": "Aim, steps and field tables for the database practicals: creating tables, entering records and queries.",
+  "chapters": [],
+  "year": null,
+  "language": "English",
+  "official": false,
+  "id": "up33",
+  "url": "/pdfs/information-technology/libreoffice-base-practicals.pdf",
+  "pages": 5
+ },
+ {
+  "slug": "mathematics/half-yearly-2026-27-hansraj",
+  "kind": "School Exam Paper",
+  "subject": "Mathematics",
+  "title": "Maths half-yearly 2026-27 — Hansraj",
+  "source": "School paper",
+  "description": "A real school half-yearly paper — attempt it in 3 hours to test your mid-term preparation.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up34",
+  "url": "/pdfs/mathematics/half-yearly-2026-27-hansraj.pdf",
+  "pages": 11
+ },
+ {
+  "slug": "mathematics/half-yearly-2026-27-new-era",
+  "kind": "School Exam Paper",
+  "subject": "Mathematics",
+  "title": "Maths half-yearly 2026-27 — New Era Public School",
+  "source": "School paper",
+  "description": "A real school mid-term paper (80 marks, sections A–E).",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up35",
+  "url": "/pdfs/mathematics/half-yearly-2026-27-new-era.pdf",
+  "pages": 4
+ },
+ {
+  "slug": "mathematics/half-yearly-2026-27-sbm",
+  "kind": "School Exam Paper",
+  "subject": "Mathematics",
+  "title": "Maths half-yearly 2026-27 — SBM",
+  "source": "School paper",
+  "description": "A real school half-yearly paper for timed practice.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up36",
+  "url": "/pdfs/mathematics/half-yearly-2026-27-sbm.pdf",
+  "pages": 7
+ },
+ {
+  "slug": "mathematics/half-yearly-2026-27-st-gregorios",
+  "kind": "School Exam Paper",
+  "subject": "Mathematics",
+  "title": "Maths half-yearly 2026-27 — St. Gregorios",
+  "source": "School paper",
+  "description": "A real school half-yearly paper for timed practice.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up37",
+  "url": "/pdfs/mathematics/half-yearly-2026-27-st-gregorios.pdf",
+  "pages": 7
+ },
+ {
+  "slug": "science/half-yearly-2026-27-govt",
+  "kind": "School Exam Paper",
+  "subject": "Science",
+  "title": "Science half-yearly 2026-27 — Govt. school",
+  "source": "School paper",
+  "description": "A real school half-yearly paper for timed practice.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up38",
+  "url": "/pdfs/science/half-yearly-2026-27-govt.pdf",
+  "pages": 12
+ },
+ {
+  "slug": "science/half-yearly-2026-27-new-era",
+  "kind": "School Exam Paper",
+  "subject": "Science",
+  "title": "Science half-yearly 2026-27 — New Era Public School",
+  "source": "School paper",
+  "description": "A real school half-yearly paper for timed practice.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up39",
+  "url": "/pdfs/science/half-yearly-2026-27-new-era.pdf",
+  "pages": 6
+ },
+ {
+  "slug": "science/half-yearly-2026-27-sbm",
+  "kind": "School Exam Paper",
+  "subject": "Science",
+  "title": "Science half-yearly 2026-27 — SBM",
+  "source": "School paper",
+  "description": "A real school half-yearly paper for timed practice.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up40",
+  "url": "/pdfs/science/half-yearly-2026-27-sbm.pdf",
+  "pages": 8
+ },
+ {
+  "slug": "science/half-yearly-2026-27-st-froebel",
+  "kind": "School Exam Paper",
+  "subject": "Science",
+  "title": "Science half-yearly 2026-27 — St. Froebel",
+  "source": "School paper",
+  "description": "A real school half-yearly paper for timed practice.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up41",
+  "url": "/pdfs/science/half-yearly-2026-27-st-froebel.pdf",
+  "pages": 10
+ },
+ {
+  "slug": "social-science/half-yearly-2026-27-neo",
+  "kind": "School Exam Paper",
+  "subject": "Social Science",
+  "title": "Social Science half-yearly 2026-27 — Neo",
+  "source": "School paper",
+  "description": "A real school half-yearly paper for timed practice.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up42",
+  "url": "/pdfs/social-science/half-yearly-2026-27-neo.pdf",
+  "pages": 6
+ },
+ {
+  "slug": "social-science/half-yearly-2026-27-sbm",
+  "kind": "School Exam Paper",
+  "subject": "Social Science",
+  "title": "Social Science half-yearly 2026-27 — SBM",
+  "source": "School paper",
+  "description": "A real school half-yearly paper for timed practice.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": false,
+  "id": "up43",
+  "url": "/pdfs/social-science/half-yearly-2026-27-sbm.pdf",
+  "pages": 14
+ },
+ {
+  "slug": "english/board-2026-series-2-1",
+  "kind": "CBSE Board Paper",
+  "subject": "English",
+  "title": "English board paper 2026 — series 2/1 (3 sets)",
+  "source": "CBSE",
+  "official": true,
+  "year": "2026",
+  "language": "English",
+  "chapters": [],
+  "description": "Official CBSE Class 10 English Language & Literature board question paper, series 2/1 — all three sets.",
+  "id": "up44",
+  "parts": [
+   {
+    "label": "Set 1",
+    "url": "/pdfs/english/board-2026-series-2-1-set-1.pdf",
+    "pages": 16
+   },
+   {
+    "label": "Set 2",
+    "url": "/pdfs/english/board-2026-series-2-1-set-2.pdf",
+    "pages": 16
+   },
+   {
+    "label": "Set 3",
+    "url": "/pdfs/english/board-2026-series-2-1-set-3.pdf",
+    "pages": 16
+   }
+  ],
+  "url": "/pdfs/english/board-2026-series-2-1-set-1.pdf",
+  "pages": 48
+ },
+ {
+  "slug": "english/board-2026-series-2-2",
+  "kind": "CBSE Board Paper",
+  "subject": "English",
+  "title": "English board paper 2026 — series 2/2 (3 sets)",
+  "source": "CBSE",
+  "official": true,
+  "year": "2026",
+  "language": "English",
+  "chapters": [],
+  "description": "Official CBSE Class 10 English Language & Literature board question paper, series 2/2 — all three sets.",
+  "id": "up45",
+  "parts": [
+   {
+    "label": "Set 1",
+    "url": "/pdfs/english/board-2026-series-2-2-set-1.pdf",
+    "pages": 19
+   },
+   {
+    "label": "Set 2",
+    "url": "/pdfs/english/board-2026-series-2-2-set-2.pdf",
+    "pages": 19
+   },
+   {
+    "label": "Set 3",
+    "url": "/pdfs/english/board-2026-series-2-2-set-3.pdf",
+    "pages": 19
+   }
+  ],
+  "url": "/pdfs/english/board-2026-series-2-2-set-1.pdf",
+  "pages": 57
+ },
+ {
+  "slug": "english/board-2026-series-2-3",
+  "kind": "CBSE Board Paper",
+  "subject": "English",
+  "title": "English board paper 2026 — series 2/3 (3 sets)",
+  "source": "CBSE",
+  "official": true,
+  "year": "2026",
+  "language": "English",
+  "chapters": [],
+  "description": "Official CBSE Class 10 English Language & Literature board question paper, series 2/3 — all three sets.",
+  "id": "up46",
+  "parts": [
+   {
+    "label": "Set 1",
+    "url": "/pdfs/english/board-2026-series-2-3-set-1.pdf",
+    "pages": 19
+   },
+   {
+    "label": "Set 2",
+    "url": "/pdfs/english/board-2026-series-2-3-set-2.pdf",
+    "pages": 19
+   },
+   {
+    "label": "Set 3",
+    "url": "/pdfs/english/board-2026-series-2-3-set-3.pdf",
+    "pages": 19
+   }
+  ],
+  "url": "/pdfs/english/board-2026-series-2-3-set-1.pdf",
+  "pages": 57
+ },
+ {
+  "slug": "english/board-2026-series-2-4",
+  "kind": "CBSE Board Paper",
+  "subject": "English",
+  "title": "English board paper 2026 — series 2/4 (3 sets)",
+  "source": "CBSE",
+  "official": true,
+  "year": "2026",
+  "language": "English",
+  "chapters": [],
+  "description": "Official CBSE Class 10 English Language & Literature board question paper, series 2/4 — all three sets.",
+  "id": "up47",
+  "parts": [
+   {
+    "label": "Set 1",
+    "url": "/pdfs/english/board-2026-series-2-4-set-1.pdf",
+    "pages": 16
+   },
+   {
+    "label": "Set 2",
+    "url": "/pdfs/english/board-2026-series-2-4-set-2.pdf",
+    "pages": 16
+   },
+   {
+    "label": "Set 3",
+    "url": "/pdfs/english/board-2026-series-2-4-set-3.pdf",
+    "pages": 16
+   }
+  ],
+  "url": "/pdfs/english/board-2026-series-2-4-set-1.pdf",
+  "pages": 48
+ },
+ {
+  "slug": "english/board-2026-series-2-5",
+  "kind": "CBSE Board Paper",
+  "subject": "English",
+  "title": "English board paper 2026 — series 2/5 (3 sets)",
+  "source": "CBSE",
+  "official": true,
+  "year": "2026",
+  "language": "English",
+  "chapters": [],
+  "description": "Official CBSE Class 10 English Language & Literature board question paper, series 2/5 — all three sets.",
+  "id": "up48",
+  "parts": [
+   {
+    "label": "Set 1",
+    "url": "/pdfs/english/board-2026-series-2-5-set-1.pdf",
+    "pages": 16
+   },
+   {
+    "label": "Set 2",
+    "url": "/pdfs/english/board-2026-series-2-5-set-2.pdf",
+    "pages": 16
+   },
+   {
+    "label": "Set 3",
+    "url": "/pdfs/english/board-2026-series-2-5-set-3.pdf",
+    "pages": 16
+   }
+  ],
+  "url": "/pdfs/english/board-2026-series-2-5-set-1.pdf",
+  "pages": 48
+ },
+ {
+  "slug": "mathematics/board-2026-standard-30-4-2",
+  "kind": "CBSE Board Paper",
+  "subject": "Mathematics",
+  "title": "Maths Standard board paper 2026 — set 30/4/2",
+  "source": "CBSE",
+  "description": "The 2026 Class 10 Mathematics (Standard) board paper, 38 questions, 80 marks.",
+  "chapters": [],
+  "year": "2026",
+  "language": "English",
+  "official": true,
+  "id": "up49",
+  "url": "/pdfs/mathematics/board-2026-standard-30-4-2.pdf",
+  "pages": 11
+ },
+ {
+  "slug": "mathematics/sample-paper-2026-27-standard",
+  "kind": "CBSE Sample Paper",
+  "subject": "Mathematics",
+  "title": "Maths Standard sample paper 2026-27",
+  "source": "CBSE",
+  "description": "CBSE’s official sample question paper for the 2026-27 board exam — the exact pattern you will face.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": true,
+  "id": "up50",
+  "url": "/pdfs/mathematics/sample-paper-2026-27-standard.pdf",
+  "pages": 6
+ },
+ {
+  "slug": "science/sample-paper-2026-27",
+  "kind": "CBSE Sample Paper",
+  "subject": "Science",
+  "title": "Science sample paper 2026-27",
+  "source": "CBSE",
+  "description": "CBSE’s official sample question paper for the 2026-27 board exam.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": true,
+  "id": "up51",
+  "url": "/pdfs/science/sample-paper-2026-27.pdf",
+  "pages": 15
+ },
+ {
+  "slug": "english/sample-paper-2026-27",
+  "kind": "CBSE Sample Paper",
+  "subject": "English",
+  "title": "English Language & Literature sample paper 2026-27",
+  "source": "CBSE",
+  "description": "CBSE’s official sample question paper for the 2026-27 board exam.",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "English",
+  "official": true,
+  "id": "up52",
+  "url": "/pdfs/english/sample-paper-2026-27.pdf",
+  "pages": 11
+ },
+ {
+  "slug": "hindi/sample-paper-2026-27-course-a",
+  "kind": "CBSE Sample Paper",
+  "subject": "Hindi",
+  "title": "हिंदी (पाठ्यक्रम अ) सैंपल पेपर 2026-27",
+  "source": "CBSE",
+  "description": "CBSE का 2026-27 बोर्ड परीक्षा के लिए आधिकारिक सैंपल प्रश्न-पत्र।",
+  "chapters": [],
+  "year": "2026-27",
+  "language": "Hindi",
+  "official": true,
+  "id": "up53",
+  "url": "/pdfs/hindi/sample-paper-2026-27-course-a.pdf",
+  "pages": 12
+ }
+]

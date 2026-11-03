@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import Header from './components/Header';
 import NotesReader from './components/NotesReader';
+import PdfViewer from './components/PdfViewer';
 import StreamModal from './components/StreamModal';
 import { useApp } from './store';
 import BoardPrep from './views/BoardPrep';
@@ -32,6 +33,7 @@ export default function App() {
       </main>
       <StreamModal />
       <NotesReader />
+      <PdfViewer />
     </div>
   );
 }

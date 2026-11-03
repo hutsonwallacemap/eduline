@@ -1,24 +1,35 @@
-import { BookOpen, CheckCircle2, ExternalLink, PenLine, Printer, Sigma, Target, X } from 'lucide-react';
-import { useEffect } from 'react';
-import { ncertChapter } from '../data/library';
+import { BookOpen, Brain, CheckCircle2, ExternalLink, FileText, PenLine, Printer, Sigma, Target, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { hostedForChapter, ncertChapter } from '../data/library';
 import { NOTES } from '../data/notes';
 import { useApp } from '../store';
+import HostedPdfList from './HostedPdfList';
 import MathText from './MathText';
+import MindMap from './MindMap';
 
-/** In-app reader for EduGenie's original chapter notes; opened from Library, Board Prep and search. */
+type Tab = 'notes' | 'map' | 'pdfs';
+
+/** In-app reader for EduGenie's original chapter notes, the chapter's mind map and its PDFs; opened from Library, Board Prep and search. */
 export default function NotesReader() {
-  const { openNote, setOpenNote, setSubject, setChapter, setView } = useApp();
-  const note = openNote ? NOTES.find((n) => `${n.subject}|${n.chapter}` === openNote) : null;
+  const { openNote, setOpenNote, openPdf, setSubject, setChapter, setView } = useApp();
+  // "subject|chapter", optionally with "#map" or "#pdfs" to open on that tab
+  const [key, startTab] = (openNote ?? '').split('#');
+  const note = openNote ? NOTES.find((n) => `${n.subject}|${n.chapter}` === key) : null;
+  // The chosen tab belongs to the note it was chosen for; a newly opened note starts on its requested tab.
+  const [picked, setPicked] = useState<{ for: string | null; tab: Tab }>({ for: null, tab: 'notes' });
+  const tab: Tab = picked.for === openNote ? picked.tab : (startTab as Tab) || 'notes';
+  const setTab = (t: Tab) => setPicked({ for: openNote, tab: t });
 
   useEffect(() => {
-    if (!note) return;
+    if (!note || openPdf) return;
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpenNote(null);
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [note, setOpenNote]);
+  }, [note, openPdf, setOpenNote]);
 
   if (!note) return null;
   const ncert = ncertChapter(10, note.subject, note.chapter);
+  const pdfs = hostedForChapter(note.subject, note.chapter);
   const title = note.chapter.includes(': ') ? note.chapter.split(': ')[1] : note.chapter;
   const hi = note.subject === 'Hindi';
   const L = hi
@@ -27,18 +38,47 @@ export default function NotesReader() {
 
   return (
     <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/60 p-4" onClick={() => setOpenNote(null)}>
-      <article className="card flex max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden" onClick={(e) => e.stopPropagation()} aria-label={`${title} notes`}>
+      <article className={`card flex max-h-[88vh] w-full flex-col overflow-hidden ${tab === 'map' ? 'max-w-5xl' : 'max-w-3xl'}`} onClick={(e) => e.stopPropagation()} aria-label={`${title} notes`}>
         <header className="flex items-start gap-3 border-b border-slate-200 px-5 py-4 dark:border-slate-800">
           <div className="min-w-0 flex-1">
             <div className="text-xs font-medium uppercase tracking-wide text-violet-600">EduGenie notes · Class 10 {note.subject}</div>
             <h2 className="text-xl font-bold">{title}</h2>
+            <div className="mt-3 flex gap-1" role="tablist">
+              {([
+                ['notes', BookOpen, hi ? 'नोट्स' : 'Notes'],
+                ['map', Brain, hi ? 'माइंड मैप' : 'Mind map'],
+                ...(pdfs.length ? [['pdfs', FileText, `PDFs (${pdfs.length})`] as const] : []),
+              ] as const).map(([id, Icon, label]) => (
+                <button
+                  key={id}
+                  role="tab"
+                  aria-selected={tab === id}
+                  onClick={() => setTab(id)}
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+                    tab === id ? 'bg-violet-600 text-white' : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" /> {label}
+                </button>
+              ))}
+            </div>
           </div>
-          <button onClick={() => window.print()} className="btn-ghost !px-3 !py-1.5"><Printer className="h-4 w-4" /> Print</button>
+          {tab !== 'pdfs' && <button onClick={() => window.print()} className="btn-ghost !px-3 !py-1.5"><Printer className="h-4 w-4" /> Print</button>}
           <button onClick={() => setOpenNote(null)} className="rounded-lg p-1 hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Close notes"><X className="h-5 w-5" /></button>
         </header>
 
         <div id="print-area" className="flex-1 space-y-5 overflow-y-auto px-5 py-5 text-sm leading-relaxed">
-          <h2 className="hidden text-lg font-bold print:block">{note.subject} — {title}</h2>
+          <h2 className="hidden text-lg font-bold print:block">{note.subject} — {title}{tab === 'map' ? (hi ? ' · माइंड मैप' : ' · mind map') : ''}</h2>
+          {tab === 'map' && <MindMap note={note} />}
+          {tab === 'pdfs' && (
+            <div>
+              <p className="mb-2 text-slate-500">
+                {hi ? 'इस अध्याय से जुड़ी PDF — EduGenie में पढ़ें या डाउनलोड करें।' : 'Revision notes, chapter-wise board questions and worksheets for this chapter — read them here or download them.'}
+              </p>
+              <HostedPdfList items={pdfs} />
+            </div>
+          )}
+          {tab === 'notes' && <>
           <p className="rounded-xl bg-violet-50 p-4 text-base dark:bg-violet-500/10"><MathText text={note.overview} /></p>
 
           <section>
@@ -81,6 +121,7 @@ export default function NotesReader() {
               ))}
             </ul>
           </section>
+          </>}
         </div>
 
         <footer className="flex flex-wrap items-center gap-2 border-t border-slate-200 px-5 py-3 dark:border-slate-800">

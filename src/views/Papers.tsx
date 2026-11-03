@@ -1,8 +1,10 @@
 import { ExternalLink, FileArchive, FileCheck2, FileText, Info, Search, Timer } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { HostedPdfButtons } from '../components/HostedPdfList';
 import OfficialResources from '../components/OfficialResources';
 import { BOARD_PAPERS, BOARD_YEARS, CBSE_PAPERS, CBSE_SESSIONS, cbseClassFor, matchesSubject } from '../data/cbseSqp';
 import { subjectsFor } from '../data/curriculum';
+import { HOSTED } from '../data/library';
 import { useApp } from '../store';
 
 type Tab = 'board' | 'sqp';
@@ -17,6 +19,12 @@ function PdfLink({ href, children }: { href: string; children: React.ReactNode }
 }
 
 const isZip = (url: string) => url.toLowerCase().endsWith('.zip');
+
+/** Copies of CBSE papers hosted on this site, shown as "read here" buttons on the matching rows. */
+const HOSTED_BOARD: Record<string, string> = { 'English Literature': 'English', 'Mathematics Standard': 'Mathematics' }; // 2026 main exam, Class X
+const HOSTED_SQP: Record<string, string> = { 'Mathematics (Standard)': 'Mathematics', Science: 'Science', 'English (Language & Literature)': 'English', 'Hindi A': 'Hindi' }; // 2026-27
+const hosted = (kind: string, subject: string | undefined, year: string) =>
+  subject ? HOSTED.filter((r) => r.kind === kind && r.subject === subject && r.year === year) : [];
 
 export default function Papers() {
   const { selectedGrade, selectedStream, setView } = useApp();
@@ -124,7 +132,7 @@ export default function Papers() {
 
           {tab === 'board' &&
             boardList.map((p) => (
-              <div key={`${p.year}-${p.exam}-${p.cls}-${p.subject}`} className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center">
+              <div key={`${p.year}-${p.exam}-${p.cls}-${p.subject}`} className="flex flex-col gap-2 py-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <div className="min-w-0 flex-1">
                   <div className="font-medium">{p.subject}</div>
                   <div className="text-xs text-slate-500">CBSE Class {p.cls} · {p.exam} exam {p.year}</div>
@@ -138,6 +146,12 @@ export default function Papers() {
                   )}
                   {practice(myClass ? appSubjectOf(p.subject) : undefined)}
                 </div>
+                {p.cls === 'X' && p.exam === 'Main' && hosted('CBSE Board Paper', HOSTED_BOARD[p.subject], String(p.year)).map((r) => (
+                  <div key={r.id} className="flex flex-wrap items-center gap-1.5 sm:basis-full sm:pl-0">
+                    <span className="text-xs text-slate-500">Read here{r.parts ? ` · series ${r.title.match(/series ([\d/]+)/)?.[1]}` : ''}:</span>
+                    <HostedPdfButtons r={r} compact />
+                  </div>
+                ))}
               </div>
             ))}
 
@@ -153,13 +167,14 @@ export default function Papers() {
                   {p.ms && <PdfLink href={p.ms}><FileCheck2 className="h-4 w-4" /> Marking Scheme</PdfLink>}
                   {p.sqpHindi && <PdfLink href={p.sqpHindi}>प्रश्न पत्र</PdfLink>}
                   {p.msHindi && <PdfLink href={p.msHindi}>अंकन योजना</PdfLink>}
+                  {p.cls === 'X' && hosted('CBSE Sample Paper', HOSTED_SQP[p.subject], p.session).map((r) => <HostedPdfButtons key={r.id} r={r} compact />)}
                   {practice(myClass ? appSubjectOf(p.subject) : undefined)}
                 </div>
               </div>
             ))}
         </div>
         <p className="mt-3 text-xs text-slate-500">
-          Files open on CBSE’s websites (cbse.gov.in and cbseacademic.nic.in). Board papers come as ZIP files with every set of that exam. Questions from these papers, with their official answers, are in Practice and the Doubt Solver.
+          Files open on CBSE’s websites (cbse.gov.in and cbseacademic.nic.in). Board papers come as ZIP files with every set of that exam; “Read” and “Set” buttons open copies hosted on EduGenie, right here in the app. Questions from these papers, with their official answers, are in Practice and the Doubt Solver.
         </p>
       </section>
     </div>

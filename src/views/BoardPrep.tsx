@@ -1,10 +1,11 @@
 import { AlarmClock, AlertTriangle, BarChart3, CalendarDays, ChevronRight, FileText, Info, PenLine, Sparkles, Trophy } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import HostedPdfList from '../components/HostedPdfList';
 import MathText from '../components/MathText';
 import SubjectIcon from '../components/SubjectIcon';
 import { AUTHORED } from '../data/bank';
 import { CLASS10_PREP, EIGHT_WEEK_PLAN, NINETY_PLUS, TIME_PLAN } from '../data/boardPrep';
-import { ncertChapter } from '../data/library';
+import { HOSTED, hostedForChapter, ncertChapter } from '../data/library';
 import { noteFor, noteKey } from '../data/notes';
 import { subjectsFor } from '../data/curriculum';
 import { useApp } from '../store';
@@ -34,6 +35,10 @@ export default function BoardPrep() {
     const order = subject?.chapters ?? [];
     return order.map((ch) => ({ chapter: ch, questions: qs.filter((q) => q.chapter === ch) })).filter((g) => g.questions.length);
   }, [subjectName, subject]);
+
+  // Whole papers for timed practice (board, sample, school, mid-term), hardest-to-get first.
+  const PAPER_ORDER = ['CBSE Board Paper', 'CBSE Sample Paper', 'School Exam Paper', 'Practice Paper'];
+  const papers = HOSTED.filter((r) => r.subject === subjectName && PAPER_ORDER.includes(r.kind)).sort((a, b) => PAPER_ORDER.indexOf(a.kind) - PAPER_ORDER.indexOf(b.kind));
 
   const practise = (chapter: string) => {
     setSubject(subjectName);
@@ -175,7 +180,15 @@ export default function BoardPrep() {
                       <h3 className="text-sm font-semibold">{g.chapter}</h3>
                       <div className="flex gap-3 text-xs font-medium">
                         {noteFor(subjectName, g.chapter) && (
-                          <button onClick={() => setOpenNote(noteKey(subjectName, g.chapter))} className="text-sky-600 hover:underline">Notes</button>
+                          <>
+                            <button onClick={() => setOpenNote(noteKey(subjectName, g.chapter))} className="text-sky-600 hover:underline">Notes</button>
+                            <button onClick={() => setOpenNote(`${noteKey(subjectName, g.chapter)}#map`)} className="text-fuchsia-600 hover:underline">Mind map</button>
+                            {hostedForChapter(subjectName, g.chapter).length > 0 && (
+                              <button onClick={() => setOpenNote(`${noteKey(subjectName, g.chapter)}#pdfs`)} className="text-orange-600 hover:underline">
+                                PDFs ({hostedForChapter(subjectName, g.chapter).length})
+                              </button>
+                            )}
+                          </>
                         )}
                         {ncertChapter(10, subjectName, g.chapter) && (
                           <a href={ncertChapter(10, subjectName, g.chapter)!.url} target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">NCERT chapter ↗</a>
@@ -214,6 +227,13 @@ export default function BoardPrep() {
               </div>
             )}
           </Card>
+
+          {papers.length > 0 && (
+            <Card icon={FileText} title={`Full papers to attempt in 3 hours — ${subjectName}`} tint="text-rose-600">
+              <p className="mb-1 text-sm text-slate-500">Sit each one with a timer, then check against the marking scheme. Board and sample papers show the exact 2026-27 pattern; school papers show what schools are asking this year.</p>
+              <HostedPdfList items={papers} />
+            </Card>
+          )}
         </>
       ) : (
         <section className="card p-5 text-sm text-slate-600 dark:text-slate-300">
