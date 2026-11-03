@@ -6,6 +6,7 @@ import { hostOf, LIBRARY, RESOURCE_KINDS, type Resource, type ResourceKind } fro
 import { useApp } from '../store';
 
 const KIND_TINT: Record<ResourceKind, string> = {
+  'EduGenie Notes': 'bg-violet-600 text-white',
   'NCERT Textbook': 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300',
   'NCERT Exemplar': 'bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300',
   'CBSE Syllabus': 'bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-300',
@@ -17,6 +18,7 @@ const KIND_TINT: Record<ResourceKind, string> = {
 };
 
 function ResourceCard({ r }: { r: Resource }) {
+  const setOpenNote = useApp((s) => s.setOpenNote);
   return (
     <div className="card flex flex-col p-4">
       <div className="mb-2 flex flex-wrap items-center gap-1.5">
@@ -29,9 +31,15 @@ function ResourceCard({ r }: { r: Resource }) {
       <h3 className="font-medium leading-snug">{r.title}</h3>
       <p className="mt-1 flex-1 text-sm text-slate-500">{r.description}</p>
       <div className="mt-2 text-xs text-slate-500">
-        {r.source} · {hostOf(r.url)}{r.year ? ` · ${r.year}` : ''}
+        {r.format === 'notes' ? 'Original EduGenie notes · CBSE 2026-27 syllabus' : `${r.source} · ${hostOf(r.url)}${r.year ? ` · ${r.year}` : ''}`}
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
+        {r.format === 'notes' ? (
+          <button onClick={() => setOpenNote(r.noteKey!)} className="btn-primary !px-3 !py-1.5">
+            <BookOpen className="h-4 w-4" /> Read notes
+          </button>
+        ) : (
+        <>
         <a href={r.url} target="_blank" rel="noopener noreferrer" className="btn-primary !px-3 !py-1.5">
           {r.format === 'pdf' ? <BookOpen className="h-4 w-4" /> : <Globe className="h-4 w-4" />}
           {r.format === 'pdf' ? 'Read online' : 'Open page'}
@@ -40,6 +48,8 @@ function ResourceCard({ r }: { r: Resource }) {
           <a href={r.url} download target="_blank" rel="noopener noreferrer" className="btn-ghost !px-3 !py-1.5">
             <Download className="h-4 w-4" /> Download
           </a>
+        )}
+        </>
         )}
       </div>
     </div>
@@ -85,7 +95,7 @@ export default function Library() {
         <div className="mb-2 flex items-center gap-2 text-sm text-white/80"><LibraryIcon className="h-4 w-4" /> Digital Library</div>
         <h1 className="text-2xl font-bold sm:text-3xl">Every Class 10 book, syllabus and notes page in one place</h1>
         <p className="mt-2 max-w-2xl text-white/85">
-          {LIBRARY.length} resources: NCERT textbooks and exemplars, the CBSE 2026-27 syllabus, and free chapter notes and mind maps — filtered by subject and chapter.
+          {LIBRARY.length} resources: EduGenie’s own chapter notes, NCERT textbooks and exemplars, the CBSE 2026-27 syllabus, and free notes and mind maps from publishers — filtered by subject and chapter.
         </p>
         <div className="mt-4 flex flex-wrap gap-2 text-xs">
           {RESOURCE_KINDS.filter((k) => counts[k]).map((k) => (

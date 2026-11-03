@@ -62,6 +62,10 @@ Classes 7–9 and 11 have no CBSE board or sample papers, so Practice there only
 
 Re-collect these each year when CBSE publishes new papers.
 
+## EduGenie chapter notes
+
+`src/data/notes/` holds original revision notes for all 48 Class 10 chapters of Mathematics (14), Science (13) and Social Science (21): overview, key points, formulas, key terms and exam focus, aligned to the CBSE 2026-27 syllabus (including which parts are assessed only in school). They are written from scratch, not adapted from publishers' notes. `NotesReader` shows them in the app (printable), opened from the Library, Board Prep chapter headings and search.
+
 ## Digital Library
 
 `src/data/library.json` lists 211 Class 10 resources, every link checked when built:

@@ -5,6 +5,7 @@ import SubjectIcon from '../components/SubjectIcon';
 import { AUTHORED } from '../data/bank';
 import { CLASS10_PREP, EIGHT_WEEK_PLAN, NINETY_PLUS, TIME_PLAN } from '../data/boardPrep';
 import { ncertChapter } from '../data/library';
+import { noteFor, noteKey } from '../data/notes';
 import { subjectsFor } from '../data/curriculum';
 import { useApp } from '../store';
 
@@ -20,7 +21,7 @@ function Card({ icon: Icon, title, children, tint = 'text-violet-600' }: { icon:
 }
 
 export default function BoardPrep() {
-  const { selectedGrade, selectedStream, setSubject, setChapter, setView } = useApp();
+  const { selectedGrade, selectedStream, setSubject, setChapter, setView, setOpenNote } = useApp();
   const isClass10 = selectedGrade === 10;
   const [subjectName, setSubjectName] = useState(CLASS10_PREP[0].subject);
   const prep = CLASS10_PREP.find((p) => p.subject === subjectName)!;
@@ -173,6 +174,9 @@ export default function BoardPrep() {
                     <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                       <h3 className="text-sm font-semibold">{g.chapter}</h3>
                       <div className="flex gap-3 text-xs font-medium">
+                        {noteFor(subjectName, g.chapter) && (
+                          <button onClick={() => setOpenNote(noteKey(subjectName, g.chapter))} className="text-sky-600 hover:underline">Notes</button>
+                        )}
                         {ncertChapter(10, subjectName, g.chapter) && (
                           <a href={ncertChapter(10, subjectName, g.chapter)!.url} target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline">NCERT chapter ↗</a>
                         )}

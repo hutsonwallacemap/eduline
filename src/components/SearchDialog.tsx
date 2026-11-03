@@ -28,7 +28,7 @@ function Group({ icon: Icon, title, children }: { icon: typeof Search; title: st
 
 /** Site-wide search: chapters, questions with answers, library resources, formulas and CBSE papers. */
 export default function SearchDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { selectedGrade, selectedStream, setSubject, setChapter, setView } = useApp();
+  const { selectedGrade, selectedStream, setSubject, setChapter, setView, setOpenNote } = useApp();
   const [query, setQuery] = useState('');
   const [bank, setBank] = useState<Question[] | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -121,12 +121,19 @@ export default function SearchDialog({ open, onClose }: { open: boolean; onClose
 
           {results && results.resources.length > 0 && (
             <Group icon={BookOpen} title="Library">
-              {results.resources.map((r) => (
-                <a key={r.id} href={r.url} target="_blank" rel="noopener noreferrer" className={row} onClick={onClose}>
-                  <span className="flex-1">{r.title} <span className="text-slate-500">· {r.kind}</span></span>
-                  <span className="text-xs text-violet-600">{r.format === 'pdf' ? 'Read' : 'Open'}</span>
-                </a>
-              ))}
+              {results.resources.map((r) =>
+                r.format === 'notes' ? (
+                  <button key={r.id} className={row} onClick={() => go(() => setOpenNote(r.noteKey!))}>
+                    <span className="flex-1">{r.title} <span className="text-slate-500">· {r.subject}</span></span>
+                    <span className="text-xs text-violet-600">Read notes</span>
+                  </button>
+                ) : (
+                  <a key={r.id} href={r.url} target="_blank" rel="noopener noreferrer" className={row} onClick={onClose}>
+                    <span className="flex-1">{r.title} <span className="text-slate-500">· {r.kind}</span></span>
+                    <span className="text-xs text-violet-600">{r.format === 'pdf' ? 'Read' : 'Open'}</span>
+                  </a>
+                ),
+              )}
             </Group>
           )}
 

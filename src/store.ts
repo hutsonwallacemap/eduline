@@ -21,6 +21,8 @@ interface AppState {
   /** Pre-fills the practice configurator (from a subject card or a sample paper). */
   practicePreset: Partial<QuizConfig> | null;
   streamModalOpen: boolean;
+  openNote: string | null; // "subject|chapter" of the chapter notes shown in the reader
+  setOpenNote: (key: string | null) => void;
   setBoard: (b: Board) => void;
   setGrade: (g: number) => void;
   setStream: (s: Stream) => void;
@@ -60,6 +62,8 @@ export const useApp = create<AppState>()(
       view: 'dashboard',
       practicePreset: null,
       streamModalOpen: false,
+      openNote: null,
+      setOpenNote: (openNote) => set({ openNote }),
       setBoard: (selectedBoard) => set({ selectedBoard }),
       setGrade: (selectedGrade) =>
         set((s) => {

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import Header from './components/Header';
+import NotesReader from './components/NotesReader';
 import StreamModal from './components/StreamModal';
 import { useApp } from './store';
 import BoardPrep from './views/BoardPrep';
@@ -30,6 +31,7 @@ export default function App() {
         {view === 'papers' && <Papers />}
       </main>
       <StreamModal />
+      <NotesReader />
     </div>
   );
 }
