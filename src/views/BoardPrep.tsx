@@ -1,4 +1,4 @@
-import { AlarmClock, AlertTriangle, BarChart3, CalendarDays, ChevronRight, FileText, PenLine, Sparkles, Trophy } from 'lucide-react';
+import { AlarmClock, AlertTriangle, BarChart3, CalendarDays, ChevronRight, FileText, Info, PenLine, Sparkles, Trophy } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import MathText from '../components/MathText';
 import SubjectIcon from '../components/SubjectIcon';
@@ -142,13 +142,25 @@ export default function BoardPrep() {
                 </div>
               </Card>
             </div>
-            <Card icon={AlertTriangle} title="Mistakes that cost marks" tint="text-amber-500">
-              <ul className="space-y-2 text-sm">
-                {prep.mistakes.map((m) => (
-                  <li key={m} className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" /> {m}</li>
-                ))}
-              </ul>
-            </Card>
+            <div className="space-y-6">
+              <Card icon={AlertTriangle} title="Mistakes that cost marks" tint="text-amber-500">
+                <ul className="space-y-2 text-sm">
+                  {prep.mistakes.map((m) => (
+                    <li key={m} className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" /> {m}</li>
+                  ))}
+                </ul>
+              </Card>
+              {prep.notInBoard && (
+                <Card icon={Info} title="Not in the 2026-27 board exam" tint="text-sky-600">
+                  <p className="mb-2 text-xs text-slate-500">Still in the syllabus and taught, but assessed only in school (internal, periodic or project work).</p>
+                  <ul className="space-y-2 text-sm">
+                    {prep.notInBoard.map((m) => (
+                      <li key={m} className="flex gap-2"><span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500" /> {m}</li>
+                    ))}
+                  </ul>
+                </Card>
+              )}
+            </div>
           </div>
 
           <Card icon={Sparkles} title={`Important questions with solutions — ${subjectName}`}>
@@ -237,7 +249,10 @@ export default function BoardPrep() {
         </ul>
       </Card>
 
-      <p className="text-xs text-slate-500">Paper pattern and weightage follow CBSE's 2025-26 sample papers and curriculum. Check the latest CBSE sample paper for your exam year in Sample Papers.</p>
+      <p className="text-xs text-slate-500">
+        Paper pattern, weightage and assessment notes follow CBSE's 2026-27 Class 10 curriculum and sample question papers (CBSE states the paper design is unchanged from 2025-26).
+        The new optional Advanced-level Mathematics and Science courses start in Class 9 in 2026-27 and do not change the Class 10 board exam this year.
+      </p>
     </div>
   );
 }

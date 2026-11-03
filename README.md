@@ -71,7 +71,7 @@ Re-collect these each year when CBSE publishes new papers.
 
 NCERT and CBSE send `X-Frame-Options: SAMEORIGIN`, so their PDFs cannot be shown inside the app; "Read online" opens them in the browser's PDF viewer. Publisher notes are copyrighted, so they are linked rather than re-hosted.
 
-CBSE's 2026-27 curriculum introduces separate Advanced/Standard syllabi for Mathematics and Science; the Board Prep paper pattern follows 2025-26 and should be checked against the 2026-27 sample papers.
+Board Prep follows CBSE's 2026-27 Class 10 curriculum and sample papers (paper design unchanged from 2025-26), including the parts assessed only in school. The new optional Advanced-level Mathematics and Science courses start in Class 9 in 2026-27 and do not affect this year's Class 10 board exam.
 
 ## Rebuilding the data
 
