@@ -27,7 +27,7 @@ export interface QuizConfig {
   subject: string;
   chapter: string;
   difficulty: Difficulty;
-  questionCount: 5 | 10 | 20;
+  questionCount: number; // 5, 10, 20, or 50 / 100 for a full chapter mock test
   types: QuestionType[];
   timeLimitMinutes: number;
 }

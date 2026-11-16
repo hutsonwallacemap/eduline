@@ -51,7 +51,7 @@ export interface Resource {
 const NOTE_RESOURCES: Resource[] = NOTES.map((n, i) => ({
   id: `note${i}`,
   kind: 'EduGenie Notes',
-  grade: 10,
+  grade: n.grade ?? 10,
   subject: n.subject,
   chapter: n.chapter,
   title: `Chapter notes — ${n.chapter.includes(': ') ? n.chapter.split(': ')[1] : n.chapter}`,

@@ -55,7 +55,12 @@ const toQuestion = (r: BankRecord): Question => ({
 let cache: Promise<Question[]> | null = null;
 
 export function loadBank(): Promise<Question[]> {
-  return (cache ??= import('./bank.json').then((m) => [...AUTHORED, ...(m.default as BankRecord[]).map(toQuestion)]));
+  // Class 12 chapter sets (100 questions a chapter) are large, so they load with the bank, not with the page.
+  return (cache ??= Promise.all([import('./bank.json'), import('./class12')]).then(([m, c12]) => [
+    ...AUTHORED,
+    ...c12.CLASS12_QUESTIONS,
+    ...(m.default as BankRecord[]).map(toQuestion),
+  ]));
 }
 
 const norm = (s: string) => s.toLowerCase().replace(/\s+/g, ' ').trim();

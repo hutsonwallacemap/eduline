@@ -1,7 +1,8 @@
-import { BookOpen, Brain, CheckCircle2, ExternalLink, FileText, PenLine, Printer, Sigma, Target, X } from 'lucide-react';
+import { BookOpen, Brain, CheckCircle2, ExternalLink, FileText, PenLine, Printer, Sigma, Target, Timer, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { hostedForChapter, ncertChapter } from '../data/library';
 import { NOTES } from '../data/notes';
+import { subjectsFor } from '../data/curriculum';
 import { useApp } from '../store';
 import HostedPdfList from './HostedPdfList';
 import MathText from './MathText';
@@ -11,7 +12,7 @@ type Tab = 'notes' | 'map' | 'pdfs';
 
 /** In-app reader for EduGenie's original chapter notes, the chapter's mind map and its PDFs; opened from Library, Board Prep and search. */
 export default function NotesReader() {
-  const { openNote, setOpenNote, openPdf, setSubject, setChapter, setView } = useApp();
+  const { openNote, setOpenNote, openPdf, selectedGrade, selectedStream, setGrade, setStream, setSubject, setChapter, setView } = useApp();
   // "subject|chapter", optionally with "#map" or "#pdfs" to open on that tab
   const [key, startTab] = (openNote ?? '').split('#');
   const note = openNote ? NOTES.find((n) => `${n.subject}|${n.chapter}` === key) : null;
@@ -28,7 +29,17 @@ export default function NotesReader() {
   }, [note, openPdf, setOpenNote]);
 
   if (!note) return null;
-  const ncert = ncertChapter(10, note.subject, note.chapter);
+  const grade = note.grade ?? 10;
+  const ncert = ncertChapter(grade, note.subject, note.chapter);
+  /** Opens Practice on this chapter, switching class (and to the Arts stream for Class 12) when needed. */
+  const practise = (questionCount?: number) => {
+    if (selectedGrade !== grade) setGrade(grade);
+    if (grade >= 11 && (selectedStream === 'General' || !subjectsFor(grade, selectedStream).some((s) => s.name === note.subject))) setStream('Humanities');
+    setSubject(note.subject);
+    setTimeout(() => setChapter(note.chapter), 0);
+    setOpenNote(null);
+    setView('practice', questionCount ? { subject: note.subject, questionCount } : null);
+  };
   const pdfs = hostedForChapter(note.subject, note.chapter);
   const title = note.chapter.includes(': ') ? note.chapter.split(': ')[1] : note.chapter;
   const hi = note.subject === 'Hindi';
@@ -41,7 +52,7 @@ export default function NotesReader() {
       <article className={`card flex max-h-[88vh] w-full flex-col overflow-hidden ${tab === 'map' ? 'max-w-5xl' : 'max-w-3xl'}`} onClick={(e) => e.stopPropagation()} aria-label={`${title} notes`}>
         <header className="flex items-start gap-3 border-b border-slate-200 px-5 py-4 dark:border-slate-800">
           <div className="min-w-0 flex-1">
-            <div className="text-xs font-medium uppercase tracking-wide text-violet-600">EduGenie notes · Class 10 {note.subject}</div>
+            <div className="text-xs font-medium uppercase tracking-wide text-violet-600">EduGenie notes · Class {grade} {note.subject}</div>
             <h2 className="text-xl font-bold">{title}</h2>
             <div className="mt-3 flex gap-1" role="tablist">
               {([
@@ -125,17 +136,14 @@ export default function NotesReader() {
         </div>
 
         <footer className="flex flex-wrap items-center gap-2 border-t border-slate-200 px-5 py-3 dark:border-slate-800">
-          <button
-            onClick={() => {
-              setSubject(note.subject);
-              setTimeout(() => setChapter(note.chapter), 0);
-              setOpenNote(null);
-              setView('practice');
-            }}
-            className="btn-primary !px-3 !py-1.5"
-          >
+          <button onClick={() => practise()} className="btn-primary !px-3 !py-1.5">
             <PenLine className="h-4 w-4" /> Practise this chapter
           </button>
+          {grade === 12 && (
+            <button onClick={() => practise(100)} className="btn-ghost !px-3 !py-1.5">
+              <Timer className="h-4 w-4" /> 100-question mock test
+            </button>
+          )}
           {ncert && (
             <a href={ncert.url} target="_blank" rel="noopener noreferrer" className="btn-ghost !px-3 !py-1.5">
               NCERT chapter <ExternalLink className="h-3.5 w-3.5" />

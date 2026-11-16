@@ -20,7 +20,7 @@ const fmt = (sec: number) => `${Math.floor(sec / 60)}:${String(Math.max(0, sec) 
 function Configurator({ onStart, busy, error }: { onStart: (cfg: QuizConfig) => void; busy: boolean; error: string | null }) {
   const { selectedBoard, selectedGrade, selectedStream, selectedChapter, practicePreset, setSubject } = useApp();
   const subject = useSelectedSubject();
-  const [count, setCount] = useState<5 | 10 | 20>(5);
+  const [count, setCount] = useState<number>(practicePreset?.questionCount ?? 5);
   const [types, setTypes] = useState<QuestionType[]>(['mcq', 'assertion_reason', 'short_answer', 'descriptive']);
   const [difficulty, setDifficulty] = useState<Difficulty>('Moderate');
 
@@ -56,8 +56,8 @@ function Configurator({ onStart, busy, error }: { onStart: (cfg: QuizConfig) => 
           <div>
             <span className="mb-1 block text-sm font-medium">Number of questions</span>
             <div className="flex gap-2">
-              {([5, 10, 20] as const).map((n) => (
-                <button key={n} onClick={() => setCount(n)} className={pill(count === n)}>{n}</button>
+              {[5, 10, 20, 50, 100].map((n) => (
+                <button key={n} onClick={() => setCount(n)} className={pill(count === n)}>{n === 100 ? '100 · full mock' : n}</button>
               ))}
             </div>
           </div>
