@@ -38,7 +38,7 @@ MAP = {
     ('leps2', 2): (P, 'Politics in India since Independence', 'Era of One-Party Dominance', None),
     ('leps2', 3): (P, 'Politics in India since Independence', 'Politics of Planned Development', None),
     ('leps2', 4): (P, 'Politics in India since Independence', "India's External Relations", None),
-    ('leps2', 5): (P, 'Politics in India since Independence', None, 'Challenges to and Restoration of the Congress System'),
+    ('leps2', 5): (P, 'Politics in India since Independence', 'Challenges to and Restoration of the Congress System', None),
     ('leps2', 6): (P, 'Politics in India since Independence', 'The Crisis of Democratic Order', None),
     ('leps2', 7): (P, 'Politics in India since Independence', 'Regional Aspirations', None),
     ('leps2', 8): (P, 'Politics in India since Independence', 'Recent Developments in Indian Politics', None),

@@ -69,6 +69,16 @@ Re-collect these each year when CBSE publishes new papers.
 
 **Mind maps** (`src/components/MindMap.tsx`) are generated from the same notes, so they never drift from them: the chapter in the centre, with branches for core ideas, formulas, key terms and exam tips. Each node gets a short handle (its bold phrase, the words before a colon, or a cue such as “$\sin A = ?$”). Recall mode hides the details so students say each point from memory and tap to check. The mind map is a tab in the notes reader and a link on every Board Prep chapter.
 
+## Class 12 Arts (Humanities)
+
+Built subject by subject. Done so far:
+
+- **History** (12 chapters) and **Political Science** (15 chapters, including "Challenges to and Restoration of the Congress System", which is in the 2026-27 NCERT book): original notes and mind maps (`src/data/notes/history12.ts`, `polsci12.ts`) and **100 questions with model answers per chapter** — 60 MCQs, 10 assertion–reason, 30 written answers — in `src/data/class12/<subject>/chNN.ts`, built with `chapterSet()` in `src/data/class12/build.ts`.
+- The Class 12 sets load with the question bank (not with the first page). Practice offers 50- and 100-question tests; the notes reader has a "100-question mock test" button that switches to Class 12 Arts.
+- The Library follows the selected class: Class 12 shows EduGenie notes plus all 77 NCERT chapter PDFs for History, Political Science, Geography, Economics and English (`scripts/library/ncert_probe12.py`, `add_class12_ncert.py`).
+
+Still to come: Geography, Economics and English notes and questions.
+
 ## Digital Library
 
 `src/data/library.json` lists 211 Class 10 resources, every link checked when built:
