@@ -15,11 +15,19 @@ const AR_OPTIONS = [
 const SOURCE = 'EduGenie chapter question';
 
 /** Turns one chapter's MCQs, assertion–reason items and written questions (with model answers) into Questions. */
-export function chapterSet(code: string, subject: string, chapter: string, set: { mcq: Mcq[]; ar: Ar[]; written: Written[] }): Question[] {
+/** Rotates an MCQ's options by a fixed, index-based step so correct answers are spread across A–D. */
+function spread([question, options, correct, explanation]: Mcq, i: number): Mcq {
+  const k = (i * 3 + 1) % options.length;
+  const out = options.map((_, j) => options[(j - k + options.length) % options.length]);
+  return [question, out, (correct + k) % options.length, explanation];
+}
+
+export function chapterSet(code: string, subject: string, chapter: string, set: { mcq: Mcq[]; ar: Ar[]; written: Written[] }, opts: { spreadAnswers?: boolean } = {}): Question[] {
   let n = 0;
+  const mcqs = opts.spreadAnswers ? set.mcq.map(spread) : set.mcq;
   const base = (difficulty: Difficulty, marks: number) => ({ id: `${code}-${++n}`, subject, chapter, grade: 12, difficulty, marks, source: SOURCE });
   return [
-    ...set.mcq.map(([question, options, correctAnswer, explanation], i): Question => ({
+    ...mcqs.map(([question, options, correctAnswer, explanation], i): Question => ({
       ...base(i % 3 === 0 ? 'Easy' : 'Moderate', 1), type: 'mcq', question, options, correctAnswer, explanation,
     })),
     ...set.ar.map(([a, r, correctAnswer, explanation]): Question => ({

@@ -1,3 +1,4 @@
+import { ECONOMICS12_NOTES } from './economics12';
 import { ENGLISH10_NOTES } from './english10';
 import { GEOGRAPHY12_NOTES } from './geography12';
 import { HINDI10_NOTES } from './hindi10';
@@ -11,7 +12,7 @@ import type { ChapterNote } from './types';
 export type { ChapterNote } from './types';
 
 /** All original EduGenie chapter notes (Class 10, and Class 12 Arts). */
-export const NOTES: ChapterNote[] = [...MATHS10_NOTES, ...SCIENCE10_NOTES, ...SST10_NOTES, ...ENGLISH10_NOTES, ...HINDI10_NOTES, ...HISTORY12_NOTES, ...POLSCI12_NOTES, ...GEOGRAPHY12_NOTES];
+export const NOTES: ChapterNote[] = [...MATHS10_NOTES, ...SCIENCE10_NOTES, ...SST10_NOTES, ...ENGLISH10_NOTES, ...HINDI10_NOTES, ...HISTORY12_NOTES, ...POLSCI12_NOTES, ...GEOGRAPHY12_NOTES, ...ECONOMICS12_NOTES];
 
 export const noteKey = (subject: string, chapter: string) => `${subject}|${chapter}`;
 
