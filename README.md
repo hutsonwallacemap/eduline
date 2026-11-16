@@ -73,11 +73,11 @@ Re-collect these each year when CBSE publishes new papers.
 
 Built subject by subject. Done so far:
 
-- **History** (12 chapters) and **Political Science** (15 chapters, including "Challenges to and Restoration of the Congress System", which is in the 2026-27 NCERT book): original notes and mind maps (`src/data/notes/history12.ts`, `polsci12.ts`) and **100 questions with model answers per chapter** — 60 MCQs, 10 assertion–reason, 30 written answers — in `src/data/class12/<subject>/chNN.ts`, built with `chapterSet()` in `src/data/class12/build.ts`.
+- **History** (12 chapters), **Political Science** (15, including "Challenges to and Restoration of the Congress System") and **Geography** (17, including India’s transport, India’s international trade and "Geographical Perspective on Selected Issues and Problems" — all in the 2026-27 NCERT books): original notes and mind maps (`src/data/notes/history12.ts`, `polsci12.ts`, `geography12.ts`) and **100 questions with model answers per chapter** — 60 MCQs, 10 assertion–reason, 30 written answers — in `src/data/class12/<subject>/chNN.ts`, built with `chapterSet()` in `src/data/class12/build.ts`.
 - The Class 12 sets load with the question bank (not with the first page). Practice offers 50- and 100-question tests; the notes reader has a "100-question mock test" button that switches to Class 12 Arts.
 - The Library follows the selected class: Class 12 shows EduGenie notes plus all 77 NCERT chapter PDFs for History, Political Science, Geography, Economics and English (`scripts/library/ncert_probe12.py`, `add_class12_ncert.py`).
 
-Still to come: Geography, Economics and English notes and questions.
+Still to come: Economics and English notes and questions.
 
 ## Digital Library
 

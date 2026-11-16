@@ -3850,8 +3850,8 @@
  {
   "kind": "NCERT Textbook",
   "subject": "Geography",
-  "chapter": null,
-  "title": "India: People and Economy — Transport and Communication (India)",
+  "chapter": "India: Transport and Communication",
+  "title": "India: People and Economy — Transport and Communication",
   "source": "NCERT",
   "official": true,
   "url": "https://ncert.nic.in/textbook/pdf/legy207.pdf",
@@ -3866,8 +3866,8 @@
  {
   "kind": "NCERT Textbook",
   "subject": "Geography",
-  "chapter": null,
-  "title": "India: People and Economy — International Trade (India)",
+  "chapter": "India: International Trade",
+  "title": "India: People and Economy — International Trade",
   "source": "NCERT",
   "official": true,
   "url": "https://ncert.nic.in/textbook/pdf/legy208.pdf",
@@ -3882,7 +3882,7 @@
  {
   "kind": "NCERT Textbook",
   "subject": "Geography",
-  "chapter": null,
+  "chapter": "Geographical Perspective on Selected Issues and Problems",
   "title": "India: People and Economy — Geographical Perspective on Selected Issues and Problems",
   "source": "NCERT",
   "official": true,

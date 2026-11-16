@@ -56,9 +56,9 @@ MAP = {
     ('legy2', 4): (G, 'India: People and Economy', 'Water Resources', None),
     ('legy2', 5): (G, 'India: People and Economy', 'Mineral and Energy Resources', None),
     ('legy2', 6): (G, 'India: People and Economy', 'Planning and Sustainable Development in Indian Context', None),
-    ('legy2', 7): (G, 'India: People and Economy', None, 'Transport and Communication (India)'),
-    ('legy2', 8): (G, 'India: People and Economy', None, 'International Trade (India)'),
-    ('legy2', 9): (G, 'India: People and Economy', None, 'Geographical Perspective on Selected Issues and Problems'),
+    ('legy2', 7): (G, 'India: People and Economy', 'India: Transport and Communication', None),
+    ('legy2', 8): (G, 'India: People and Economy', 'India: International Trade', None),
+    ('legy2', 9): (G, 'India: People and Economy', 'Geographical Perspective on Selected Issues and Problems', None),
     ('leec1', 1): (E, 'Introductory Macroeconomics', None, 'Introduction'),
     ('leec1', 2): (E, 'Introductory Macroeconomics', 'Macro: National Income Accounting', None),
     ('leec1', 3): (E, 'Introductory Macroeconomics', 'Macro: Money and Banking', None),
@@ -105,7 +105,7 @@ def main():
         if not p:
             print('missing', code, n)
             continue
-        name = (chapter or label).split(': ', 1)[-1] if (chapter or label).startswith(('Poem: ', 'Vistas: ', 'Macro: ', 'IED: ')) else (chapter or label)
+        name = (chapter or label).split(': ', 1)[-1] if (chapter or label).startswith(('Poem: ', 'Vistas: ', 'Macro: ', 'IED: ', 'India: ')) else (chapter or label)
         lib.append({
             'kind': 'NCERT Textbook', 'subject': subject, 'chapter': chapter, 'title': f'{book} — {name}',
             'source': 'NCERT', 'official': True, 'url': p['url'], 'format': 'pdf', 'pages': p['pages'], 'year': '2026-27 reprint',

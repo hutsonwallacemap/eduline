@@ -93,7 +93,7 @@ const CHAPTERS: Record<string, Record<number, string[]>> = {
   },
   Geography: {
     11: ['Geography as a Discipline', 'The Origin and Evolution of the Earth', 'Interior of the Earth', 'Distribution of Oceans and Continents', 'Geomorphic Processes', 'Landforms and their Evolution', 'Composition and Structure of Atmosphere', 'Solar Radiation, Heat Balance and Temperature', 'Atmospheric Circulation and Weather Systems', 'World Climate and Climate Change', 'Movements of Ocean Water', 'India: Structure and Physiography', 'India: Drainage System', 'India: Climate'],
-    12: ['Human Geography: Nature and Scope', 'The World Population', 'Human Development', 'Primary Activities', 'Secondary Activities', 'Tertiary and Quaternary Activities', 'Transport and Communication', 'International Trade', 'Population: Distribution, Density, Growth and Composition', 'Human Settlements', 'Land Resources and Agriculture', 'Water Resources', 'Mineral and Energy Resources', 'Planning and Sustainable Development in Indian Context'],
+    12: ['Human Geography: Nature and Scope', 'The World Population', 'Human Development', 'Primary Activities', 'Secondary Activities', 'Tertiary and Quaternary Activities', 'Transport and Communication', 'International Trade', 'Population: Distribution, Density, Growth and Composition', 'Human Settlements', 'Land Resources and Agriculture', 'Water Resources', 'Mineral and Energy Resources', 'Planning and Sustainable Development in Indian Context', 'India: Transport and Communication', 'India: International Trade', 'Geographical Perspective on Selected Issues and Problems'],
   },
 };
 
