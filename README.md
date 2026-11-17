@@ -88,9 +88,10 @@ Being brought up to the Class 12 standard subject by subject. Done so far:
 
 - **Science** (13 chapters): fuller notes and mind maps (`src/data/notes/science10.ts` — about 10 points and 4 key terms a chapter) and **100 questions with model answers per chapter** — 60 MCQs, 10 assertion–reason, 30 written answers in the board pattern (2, 3 and 5 marks), with worked numericals for Light and Electricity. Sets are in `src/data/class10/<subject>/chNN.ts`, built with `chapterSet(..., { grade: 10, spreadAnswers: true })`, and load with the question bank. Topics assessed only in school in 2026-27 (evolution; electric motor and generator) are left out of the sets.
 - **Mathematics** (14 chapters): fuller notes and mind maps (`src/data/notes/maths10.ts`) and 100 questions per chapter in the same pattern, every numerical worked step by step. Topics removed in the rationalised syllabus — Euclid’s division lemma, cross-multiplication, completing the square, area of a triangle by coordinates, complementary-angle ratios, area of similar triangles and the Pythagoras proof, frustum, conversion of solids and ogives — are left out.
+- **Social Science** (21 chapters — History, Geography, Civics, Economics): fuller notes and mind maps (`src/data/notes/sst10.ts`) and 100 questions per chapter in the same pattern. Board-scope notes from the 2026-27 syllabus are kept in the notes: The Making of a Global World (sub-topics 1–1.3 only), The Age of Industrialisation (periodic assessment only), Lifelines of National Economy (map work only) and Globalisation (the first two sections only).
 - `src/data/chapterSets.ts` lists the subjects that have full sets; the notes reader shows the "100-question mock test" button only for those.
 
-Still to come for Class 10: Social Science, English and Hindi.
+Still to come for Class 10: English and Hindi.
 
 ## Digital Library
 
