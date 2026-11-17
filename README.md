@@ -90,9 +90,10 @@ Being brought up to the Class 12 standard subject by subject. Done so far:
 - **Mathematics** (14 chapters): fuller notes and mind maps (`src/data/notes/maths10.ts`) and 100 questions per chapter in the same pattern, every numerical worked step by step. Topics removed in the rationalised syllabus — Euclid’s division lemma, cross-multiplication, completing the square, area of a triangle by coordinates, complementary-angle ratios, area of similar triangles and the Pythagoras proof, frustum, conversion of solids and ogives — are left out.
 - **Social Science** (21 chapters — History, Geography, Civics, Economics): fuller notes and mind maps (`src/data/notes/sst10.ts`) and 100 questions per chapter in the same pattern. Board-scope notes from the 2026-27 syllabus are kept in the notes: The Making of a Global World (sub-topics 1–1.3 only), The Age of Industrialisation (periodic assessment only), Lifelines of National Economy (map work only) and Globalisation (the first two sections only).
 - **English** (25 chapters — First Flight prose and poems, Footprints without Feet): fuller notes and mind maps (`src/data/notes/english10.ts`) and 100 questions per chapter in the same pattern — comprehension, character, theme and poetic-device MCQs, assertion–reason, and 2-, 3- and 5-mark answers. Questions describe and discuss the texts without reproducing them. The Grammar, Writing Skills and Reading Comprehension notes have no chapter set, so they show no mock-test button.
+- **Hindi** (15 chapters — Kshitij Part 2 and Kritika Part 2, Course A): fuller notes and mind maps (`src/data/notes/hindi10.ts`) and 100 questions per chapter in the same pattern, written in Hindi, with assertion–reason items in CBSE’s Hindi wording (`chapterSet(..., { lang: 'hi' })`). Questions discuss the texts without reproducing them. The Vyakaran and Lekhan notes have no chapter set, so they show no mock-test button.
 - `src/data/chapterSets.ts` lists the subjects that have full sets; the notes reader shows the "100-question mock test" button only for those.
 
-Still to come for Class 10: Hindi.
+All five Class 10 subjects now have full chapter sets.
 
 ## Digital Library
 
