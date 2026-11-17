@@ -73,13 +73,14 @@ Re-collect these each year when CBSE publishes new papers.
 
 Built subject by subject. Done so far:
 
-- **History** (12 chapters), **Political Science** (15, including "Challenges to and Restoration of the Congress System") and **Geography** (17, including India’s transport, India’s international trade and "Geographical Perspective on Selected Issues and Problems" — all in the 2026-27 NCERT books) and **Economics** (13: five Macroeconomics and eight Indian Economic Development chapters): original notes and mind maps (`src/data/notes/history12.ts`, `polsci12.ts`, `geography12.ts`, `economics12.ts`) and **100 questions with model answers per chapter** — 60 MCQs, 10 assertion–reason, 30 written answers — in `src/data/class12/<subject>/chNN.ts`, built with `chapterSet()` in `src/data/class12/build.ts`.
+- **History** (12 chapters), **Political Science** (15, including "Challenges to and Restoration of the Congress System"), **Geography** (17, including India’s transport, India’s international trade and "Geographical Perspective on Selected Issues and Problems" — all in the 2026-27 NCERT books), **Economics** (13: five Macroeconomics and eight Indian Economic Development chapters) and **English Core** (19: eight Flamingo prose chapters, five Flamingo poems and six Vistas chapters): original notes and mind maps (`src/data/notes/history12.ts`, `polsci12.ts`, `geography12.ts`, `economics12.ts`, `english12.ts`) and **100 questions with model answers per chapter** — 60 MCQs, 10 assertion–reason, 30 written answers — in `src/data/class12/<subject>/chNN.ts`, built with `chapterSet()` in `src/data/class12/build.ts`.
 - The Class 12 sets load with the question bank (not with the first page). Practice offers 50- and 100-question tests; the notes reader has a "100-question mock test" button that switches to Class 12 Arts.
 - The Library follows the selected class: Class 12 shows EduGenie notes plus all 77 NCERT chapter PDFs for History, Political Science, Geography, Economics and English (`scripts/library/ncert_probe12.py`, `add_class12_ncert.py`).
 
-- Economics MCQs pass `{ spreadAnswers: true }` to `chapterSet()`, which rotates each question's options so the correct answers are spread evenly across A–D.
+- Economics and English MCQs pass `{ spreadAnswers: true }` to `chapterSet()`, which rotates each question's options so the correct answers are spread evenly across A–D.
+- English notes and answers are written in our own words; they summarise and analyse the texts rather than reproduce them. Only Keats's public-domain lines are quoted. The three skills topics (Grammar, Writing Skills, Reading Comprehension) have no chapter sets yet.
 
-Still to come: English notes and questions.
+All five Class 12 Arts subjects now have notes, mind maps and 100-question sets for every literature/textbook chapter.
 
 ## Digital Library
 
