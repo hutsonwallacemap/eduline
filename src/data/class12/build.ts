@@ -1,6 +1,6 @@
 import type { Difficulty, Question } from '../../types/quiz';
 
-/** Compact forms for writing Class 12 chapter question sets (100 per chapter). */
+/** Compact forms for writing chapter question sets (100 per chapter) — Class 12, and Class 10 via `grade: 10`. */
 export type Mcq = [question: string, options: string[], correct: number, explanation: string];
 export type Ar = [assertion: string, reason: string, correct: number, explanation: string];
 export type Written = [marks: number, question: string, answer: string];
@@ -22,10 +22,11 @@ function spread([question, options, correct, explanation]: Mcq, i: number): Mcq 
   return [question, out, (correct + k) % options.length, explanation];
 }
 
-export function chapterSet(code: string, subject: string, chapter: string, set: { mcq: Mcq[]; ar: Ar[]; written: Written[] }, opts: { spreadAnswers?: boolean } = {}): Question[] {
+export function chapterSet(code: string, subject: string, chapter: string, set: { mcq: Mcq[]; ar: Ar[]; written: Written[] }, opts: { spreadAnswers?: boolean; grade?: number } = {}): Question[] {
   let n = 0;
+  const grade = opts.grade ?? 12;
   const mcqs = opts.spreadAnswers ? set.mcq.map(spread) : set.mcq;
-  const base = (difficulty: Difficulty, marks: number) => ({ id: `${code}-${++n}`, subject, chapter, grade: 12, difficulty, marks, source: SOURCE });
+  const base = (difficulty: Difficulty, marks: number) => ({ id: `${code}-${++n}`, subject, chapter, grade, difficulty, marks, source: SOURCE });
   return [
     ...mcqs.map(([question, options, correctAnswer, explanation], i): Question => ({
       ...base(i % 3 === 0 ? 'Easy' : 'Moderate', 1), type: 'mcq', question, options, correctAnswer, explanation,

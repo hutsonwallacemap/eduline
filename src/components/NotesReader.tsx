@@ -7,6 +7,7 @@ import { useApp } from '../store';
 import HostedPdfList from './HostedPdfList';
 import MathText from './MathText';
 import MindMap from './MindMap';
+import { hasFullSet } from '../data/chapterSets';
 
 type Tab = 'notes' | 'map' | 'pdfs';
 
@@ -139,7 +140,7 @@ export default function NotesReader() {
           <button onClick={() => practise()} className="btn-primary !px-3 !py-1.5">
             <PenLine className="h-4 w-4" /> Practise this chapter
           </button>
-          {grade === 12 && (
+          {hasFullSet(grade, note.subject) && (
             <button onClick={() => practise(100)} className="btn-ghost !px-3 !py-1.5">
               <Timer className="h-4 w-4" /> 100-question mock test
             </button>

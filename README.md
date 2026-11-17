@@ -82,6 +82,15 @@ Built subject by subject. Done so far:
 
 All five Class 12 Arts subjects now have notes, mind maps and 100-question sets for every literature/textbook chapter.
 
+## Class 10 — full chapter sets
+
+Being brought up to the Class 12 standard subject by subject. Done so far:
+
+- **Science** (13 chapters): fuller notes and mind maps (`src/data/notes/science10.ts` — about 10 points and 4 key terms a chapter) and **100 questions with model answers per chapter** — 60 MCQs, 10 assertion–reason, 30 written answers in the board pattern (2, 3 and 5 marks), with worked numericals for Light and Electricity. Sets are in `src/data/class10/<subject>/chNN.ts`, built with `chapterSet(..., { grade: 10, spreadAnswers: true })`, and load with the question bank. Topics assessed only in school in 2026-27 (evolution; electric motor and generator) are left out of the sets.
+- `src/data/chapterSets.ts` lists the subjects that have full sets; the notes reader shows the "100-question mock test" button only for those.
+
+Still to come for Class 10: Mathematics, Social Science, English and Hindi.
+
 ## Digital Library
 
 `src/data/library.json` lists 211 Class 10 resources, every link checked when built:

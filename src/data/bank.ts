@@ -55,10 +55,11 @@ const toQuestion = (r: BankRecord): Question => ({
 let cache: Promise<Question[]> | null = null;
 
 export function loadBank(): Promise<Question[]> {
-  // Class 12 chapter sets (100 questions a chapter) are large, so they load with the bank, not with the page.
-  return (cache ??= Promise.all([import('./bank.json'), import('./class12')]).then(([m, c12]) => [
+  // Chapter sets (100 questions a chapter, Class 10 and 12) are large, so they load with the bank, not with the page.
+  return (cache ??= Promise.all([import('./bank.json'), import('./class12'), import('./class10')]).then(([m, c12, c10]) => [
     ...AUTHORED,
     ...c12.CLASS12_QUESTIONS,
+    ...c10.CLASS10_QUESTIONS,
     ...(m.default as BankRecord[]).map(toQuestion),
   ]));
 }
