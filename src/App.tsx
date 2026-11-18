@@ -31,6 +31,10 @@ export default function App() {
         {view === 'revision' && <Revision />}
         {view === 'papers' && <Papers />}
       </main>
+      <footer className="border-t border-slate-200 py-6 text-center text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400">
+        Built by <span className="font-medium text-slate-700 dark:text-slate-200">Sam Hutson Wallace</span> and{' '}
+        <span className="font-medium text-slate-700 dark:text-slate-200">Cynthika Wallace</span>
+      </footer>
       <StreamModal />
       <NotesReader />
       <PdfViewer />
