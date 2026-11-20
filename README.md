@@ -82,6 +82,16 @@ Built subject by subject. Done so far:
 
 All five Class 12 Arts subjects now have notes, mind maps and 100-question sets for every literature/textbook chapter.
 
+## Class 12 Science and Commerce
+
+Being added subject by subject, in the same format as the Arts subjects. Done so far:
+
+- **Physics** (14 chapters, from Electric Charges and Fields to Semiconductor Electronics): fuller notes and mind maps (`src/data/notes/physics12.ts`) and 100 questions per chapter in `src/data/class12/physics/ch01–ch14.ts` — 60 MCQs, 10 assertion–reason and 30 written answers (10 × 2, 12 × 3, 8 × 5 marks), with worked numericals. Formulas in the questions use plain Unicode (×, ², ε₀, λ); the notes use KaTeX. Topics dropped from the current syllabus (potentiometer, meter bridge, cyclotron, transistors, logic gates, special-purpose diodes) are left out.
+- The notes reader's "100-question mock test" button switches to a stream that has the subject (Science (PCM) for Physics).
+- The Class 12 Library follows the selected stream and lists the subjects that have material; the others are named as coming soon.
+
+Still to come: Chemistry, Mathematics, Biology, Computer Science, Accountancy, Business Studies and Applied Mathematics.
+
 ## Class 10 — full chapter sets
 
 Being brought up to the Class 12 standard subject by subject. Done so far:

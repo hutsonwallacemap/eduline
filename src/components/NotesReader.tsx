@@ -2,7 +2,7 @@ import { BookOpen, Brain, CheckCircle2, ExternalLink, FileText, PenLine, Printer
 import { useEffect, useState } from 'react';
 import { hostedForChapter, ncertChapter } from '../data/library';
 import { NOTES } from '../data/notes';
-import { subjectsFor } from '../data/curriculum';
+import { STREAMS, subjectsFor } from '../data/curriculum';
 import { useApp } from '../store';
 import HostedPdfList from './HostedPdfList';
 import MathText from './MathText';
@@ -32,10 +32,13 @@ export default function NotesReader() {
   if (!note) return null;
   const grade = note.grade ?? 10;
   const ncert = ncertChapter(grade, note.subject, note.chapter);
-  /** Opens Practice on this chapter, switching class (and to the Arts stream for Class 12) when needed. */
+  /** Opens Practice on this chapter, switching class (and, for Class 11–12, to a stream that offers the subject) when needed. */
   const practise = (questionCount?: number) => {
     if (selectedGrade !== grade) setGrade(grade);
-    if (grade >= 11 && (selectedStream === 'General' || !subjectsFor(grade, selectedStream).some((s) => s.name === note.subject))) setStream('Humanities');
+    if (grade >= 11 && (selectedStream === 'General' || !subjectsFor(grade, selectedStream).some((s) => s.name === note.subject))) {
+      const stream = STREAMS.find((st) => subjectsFor(grade, st.value).some((s) => s.name === note.subject));
+      if (stream) setStream(stream.value);
+    }
     setSubject(note.subject);
     setTimeout(() => setChapter(note.chapter), 0);
     setOpenNote(null);

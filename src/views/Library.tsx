@@ -73,10 +73,21 @@ function ResourceCard({ r }: { r: Resource }) {
 
 export default function Library() {
   const { selectedGrade, selectedStream } = useApp();
-  // Class 10 and the Class 12 Arts (Humanities) subjects are covered; other classes see Class 10.
+  // Class 10 and Class 12 are covered; other classes see Class 10. Class 12 follows the chosen stream,
+  // showing only the subjects that have material on the shelf (Humanities when the stream has none yet).
   const grade = selectedGrade === 12 ? 12 : 10;
-  const subjects = subjectsFor(grade, grade === 12 ? 'Humanities' : 'General');
-  const shelf = useMemo(() => LIBRARY.filter((r) => r.grade === grade), [grade]);
+  const covered = useMemo(() => new Set(LIBRARY.filter((r) => r.grade === 12).map((r) => r.subject)), []);
+  const stream = grade === 12 && selectedStream !== 'General' && subjectsFor(12, selectedStream).some((s) => covered.has(s.name)) ? selectedStream : 'Humanities';
+  const streamSubjects = subjectsFor(grade, grade === 12 ? stream : 'General');
+  const subjects = grade === 12 ? streamSubjects.filter((s) => covered.has(s.name)) : streamSubjects;
+  const missing = grade === 12 ? streamSubjects.filter((s) => !covered.has(s.name)).map((s) => s.name) : [];
+  const shelf = useMemo(
+    () => LIBRARY.filter((r) => r.grade === grade && (grade !== 12 || r.subject === 'All subjects' || subjects.some((s) => s.name === r.subject))),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [grade, stream],
+  );
+  const streamLabel = stream === 'Humanities' ? 'Arts' : stream;
+  const subjectList = subjects.map((s) => s.name).join(', ').replace(/, ([^,]*)$/, ' and $1');
   const [subject, setSubject] = useState<string>('All');
   const [kind, setKind] = useState<ResourceKind | 'All'>('All');
   const [chapter, setChapter] = useState('All');
@@ -111,11 +122,11 @@ export default function Library() {
     <div className="space-y-6">
       <section className="rounded-3xl bg-gradient-to-br from-sky-600 to-indigo-700 p-6 text-white sm:p-8">
         <div className="mb-2 flex items-center gap-2 text-sm text-white/80"><LibraryIcon className="h-4 w-4" /> Digital Library</div>
-        <h1 className="text-2xl font-bold sm:text-3xl">Every Class {grade}{grade === 12 ? ' Arts' : ''} book, paper and notes PDF in one place</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">Every Class {grade}{grade === 12 ? ` ${streamLabel}` : ''} book, paper and notes PDF in one place</h1>
         <p className="mt-2 max-w-2xl text-white/85">
           {shelf.length} resources:{' '}
           {grade === 12
-            ? 'EduGenie chapter notes and mind maps with 100-question mock tests, and every NCERT Class 12 History, Political Science, Geography, Economics and English chapter'
+            ? `EduGenie chapter notes and mind maps with 100-question mock tests${shelf.some((r) => r.kind === 'NCERT Textbook') ? ', and NCERT chapters,' : ''} for ${subjectList}`
             : 'EduGenie’s own chapter notes and mind maps, revision notes, chapter-wise board questions, worksheets, CBSE and school exam papers you can read right here, plus NCERT books and the CBSE 2026-27 syllabus'}
           {' '}— filtered by subject and chapter.
         </p>
@@ -131,9 +142,12 @@ export default function Library() {
           <Info className="mt-0.5 h-4 w-4 shrink-0" /> The library covers Class 10 and Class 12 Arts; showing Class 10. CBSE papers for every class are in Sample Papers.
         </div>
       )}
-      {grade === 12 && selectedStream !== 'Humanities' && (
+      {grade === 12 && ((selectedStream !== 'General' && stream !== selectedStream) || missing.length > 0) && (
         <div className="flex items-start gap-2 rounded-xl bg-sky-50 p-3 text-sm text-sky-900 dark:bg-sky-500/10 dark:text-sky-200">
-          <Info className="mt-0.5 h-4 w-4 shrink-0" /> The Class 12 library covers the Arts (Humanities) subjects so far.
+          <Info className="mt-0.5 h-4 w-4 shrink-0" />
+          {stream !== selectedStream
+            ? `The Class 12 library has no ${selectedStream} subjects yet; showing Arts (Humanities).`
+            : `${missing.join(', ')} ${missing.length > 1 ? 'are' : 'is'} coming soon to the Class 12 ${streamLabel} library.`}
         </div>
       )}
 
